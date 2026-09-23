@@ -231,6 +231,10 @@ gradiente 1/2/4/8 hilos = 4,57 / 4,05 / 2,97 / 3,02 s; evolución = 5,35 / 3,57 
 usar más: subir "Partidas por lote" (Científico) o entrenar por evolución (`threadNote`, `test/ui-entreno-hilos`).
 `createTrainer` no admite todavía un `learnCfg` propio del entreno (la firma de §9.4 lo cita, pero no está hecho).
 
+### 9.8 Duración de un entreno (auditoría P0, 2026-09-23)
+`elapsedMs` es el tiempo desde que empezó hasta que acabó (bien, parado o con error); mientras sigue en marcha, hasta
+ahora. Un entreno terminado no cambia su `elapsedMs` aunque se pida más tarde (antes seguía contando para siempre).
+
 ## 10. Arreglos tras la revisión
 Decisiones del usuario del 2026-09-23: "arréglalo tú"; evolución = concurso tras el duelo; a x1/x10 se ve la
 red real en vivo; bofetada con efecto inmediato. Completan §1–§9 sin cambiar lo que ya decían.
