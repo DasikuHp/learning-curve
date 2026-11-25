@@ -90,6 +90,10 @@ export function advice(genome, catalog, type) {
   }
   if (type === 'hand.value') { const had = g.blocks.find((b) => b.type === type); if (had) return { can: false, why: `Ya tienes ${e.name} (${had.id}): solo puede haber uno por red.` }; }
   if (type === 'hand.adjust' && !g.blocks.some((b) => b.type === 'hand.choose')) return { can: true, why: 'Afina el tiro que escoge Elegir: sin Elegir no hace nada. Añade también Elegir y dale los mismos candidatos.' };
+  // Simulador + Ajustar: el Simulador ve el tiro sin empujar y Ajustar lo mueve después (README, "¿Aprende de verdad?")
+  const SIM_ADJUST = 'Ojo: el Simulador ve cada tiro tal cual y Ajustar lo mueve después de escogerlo, así que tiros que iban a dar fallan. En las pruebas, una Vidente con los dos juntos casi no aprendía; sin Ajustar, sí.';
+  if (type === 'hand.adjust' && g.blocks.some((b) => b.type === 'eye.simulator')) return { can: true, why: SIM_ADJUST };
+  if (type === 'eye.simulator' && g.blocks.some((b) => b.type === 'hand.adjust')) return { can: true, why: SIM_ADJUST };
   if (e.group === 'eyes') return { can: true, why: `No recibe cables: después une su punto de salida a un Instinto${type === 'eye.candidates' || type === 'eye.simulator' ? ' o directamente a Elegir' : type === 'eye.moves' ? ' o directamente a Moverse' : ', una Memoria o una mano'}.` };
   const need = needs(type);
   if (need) {
