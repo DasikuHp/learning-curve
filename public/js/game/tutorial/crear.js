@@ -89,7 +89,9 @@ const need = (g, t, c) => (has(g, t) ? g : M.addBlock(g, t, c).genome);
 function play(g, c) { g = need(need(g, 'eye.candidates', c), 'hand.choose', c); return ready({ ready: readiness(g, c) }, 'fed') ? g : applyGenome(g, { wire: ['eye.candidates', 'hand.choose'] }, c); }
 function think(g, c) { g = play(g, c); return ready({ ready: readiness(g, c) }, 'think') ? g : applyGenome(g, { insert: { type: 'dense', on: ['eye.candidates', 'hand.choose'] } }, c); }
 function move(g, c) { return applyGenome(g, { add: ['eye.moves', 'foot.move'], wire: ['eye.moves', 'foot.move'] }, c); }
-function memory(g, c) { return applyGenome(think(g, c), { add: ['eye.features', 'echo'], wire: ['eye.features', 'echo'], wire2: ['echo', 'think'] }, c); }
+// Simulador enchufado al Instinto (capítulo «Que piense»): sin él, una red que solo ve Candidatos apenas aprende a apuntar
+function sees(g, c) { return applyGenome(think(g, c), { add: ['eye.simulator'], wire: ['eye.simulator', 'think'] }, c); }
+function memory(g, c) { return applyGenome(sees(g, c), { add: ['eye.features', 'echo'], wire: ['eye.features', 'echo'], wire2: ['echo', 'think'] }, c); }
 
 // ---------- los capítulos ----------
 // en los retos se ilumina la red (lo que hay en el lienzo), no el lienzo entero: así la ventana cabe al lado
@@ -180,6 +182,15 @@ export const CHAPTERS = [
       text: 'Cada barra cuenta cuántos pesos tienen ese valor: naranja, negativos; cian, positivos; la del medio, cerca de 0. Sin entrenar son números al azar; entrenar es moverlos.' },
     { key: 'datos', kind: 'show', target: 'datos', lit: [(x) => S.node(x, 'think')], present: ['datos'], title: 'Neuronas y pesos',
       text: 'Los puntos de cada tarjeta son sus neuronas, encendidas con la señal de la escena del banco. Arriba, los datos de tu red: generación, bloques, pesos y partidas jugadas.' },
+    { key: 'simulador', kind: 'do', target: S.pal('eye.simulator'), title: 'Que vea el futuro',
+      text: 'Candidatos dice cómo es cada tiro, pero no qué pasaría. 🔮 Simulador lo prueba antes de disparar: si mataría a alguien, si choca con un muro. Con eso una red aprende a escoger el tiro bueno en un centenar de partidas; sin él, apenas aprende.',
+      todo: 'Añade 🔮 Simulador (grupo Ojos).', gesture: { name: 'paleta', at: S.pal('eye.simulator') },
+      done: (x) => has(x.g, 'eye.simulator'), help: { add: ['eye.simulator'] } },
+    { key: 'simulador-instinto', kind: 'do', target: (x) => S.port(x, 'eye.simulator'), lit: (x) => [S.node(x, 'think')], title: 'Simulador → Instinto',
+      text: 'Lo que ve el Simulador tiene que llegar adonde se piensa cada tiro.', todo: 'Une Simulador con tu 🧠 Instinto.',
+      gesture: { name: 'arrastrar-cable', from: (x) => S.port(x, 'eye.simulator'), to: (x) => S.node(x, 'think') },
+      done: (x) => { const sid = idOf(x.g, 'eye.simulator'); return !!sid && outs(x.g, sid).length > 0; }, help: { wire: ['eye.simulator', 'think'] },
+      after: () => 'Ahora tu Instinto ve, para cada tiro, cómo es y qué pasaría. Es lo que más ayuda a aprender.' },
     { key: 'reto', kind: 'reto', target: RED, room: CARDS, lit: ['grupo-instinct', 'insertar', 'cable-mas'], present: ['grupo-instinct'], title: 'Reto: que piense dos veces',
       text: 'Una capa detrás de otra combina lo que ya combinó la primera. Vale el ＋ del cable, o sacar un Instinto del grupo Instinto de «Nuevo bloque» y soltarlo encima del cable.', todo: 'Pon otro 🧠 Instinto entre tu Instinto y Elegir.',
       gesture: { name: 'capa', at: (x) => (x.insertOpen ? '#edInsert [data-insert="dense"]' : x.hoverWire !== null && x.hoverWire !== undefined ? '.wire-plus' : S.wire(x, 'think', 'hand.choose')) },
@@ -187,7 +198,7 @@ export const CHAPTERS = [
       after: () => 'Dos capas seguidas: también puedes arrastrar una tarjeta sin cables encima de un cable y soltarla, y se mete en medio.' },
   ] },
 
-  { key: 'banco', title: 'El banco de pruebas', ask: '¿Escoge igual en otra situación?', ensure: think, steps: [
+  { key: 'banco', title: 'El banco de pruebas', ask: '¿Escoge igual en otra situación?', ensure: sees, steps: [
     { key: 'escenas', kind: 'show', target: 'escenas', present: ['escenas'], title: 'Escenas',
       text: 'Situaciones fijas para probar tu red. La misma escena con la misma semilla da siempre lo mismo: si la elección cambia, es por tus cambios.' },
     { key: 'apuesta-roca', kind: 'ask', target: 'escena', title: 'Apuesta',
@@ -236,7 +247,7 @@ export const CHAPTERS = [
       after: () => 'Se mueve otra vez.' },
   ] },
 
-  { key: 'recordar', title: 'Que recuerde', ask: '¿Cómo sabe si el último tiro se quedó corto?', ensure: think, steps: [
+  { key: 'recordar', title: 'Que recuerde', ask: '¿Cómo sabe si el último tiro se quedó corto?', ensure: sees, steps: [
     { key: 'rasgos', kind: 'do', target: S.pal('eye.features'), title: 'Rasgos', text: () => co('memoria').ask,
       todo: 'Añade 📊 Rasgos (grupo Ojos): 26 números sobre la partida (distancias, turno, el último tiro…).',
       gesture: { name: 'paleta', at: S.pal('eye.features') }, done: (x) => has(x.g, 'eye.features'), help: { add: ['eye.features'] } },
