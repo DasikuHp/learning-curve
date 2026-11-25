@@ -90,7 +90,7 @@ Ahora la plantilla Vidente no lleva Ajustar y aprende con una tasa de 0,01 en ve
 
 En el boletín del juego (40 escenas fijas de un solo disparo) las tres Videntes pasaron de acertar el 15 % de los tiros al 50 %, y su supervivencia contra el bot Sniper subió del 0 % al 35-40 %.
 
-Lo que no está resuelto: el Francotirador, que no tiene Simulador y solo ve la geometría, mejora mucho más despacio (de 0,40 a 0,56 bajas por partida en 300 partidas contra `chaos`), y contra `greedy`, que busca el mejor tiro posible, la señal es débil y con mucho ruido.
+Lo que no está resuelto: las redes sin Simulador, que solo ven la geometría, aprenden mucho más despacio. El Francotirador pasa de 0,40 a 0,56 bajas por partida en 300 partidas contra `chaos`, y contra Vidente 1 apenas cambia en ese tiempo (de 46 a 56 % de victorias en una prueba y de 44 a 46 % en otra). Contra `greedy`, que busca el mejor tiro posible, la señal es débil y con mucho ruido.
 
 Los datos salen de los registros de cada entreno (`curve` en `records/trainings/<id>.json`).
 
