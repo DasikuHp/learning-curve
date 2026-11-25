@@ -12,11 +12,11 @@ function make(id, name, blocks, wires, extra, seed) {
 export const TEMPLATES = {
   sniper: {
     name: '🎯 Francotirador',
-    why: 'Solo geometría: ve Rasgos y Candidatos, sin Simulador. Aprende despacio pero sin muletas: lo que sabe, lo sabe de verdad.',
+    why: 'Solo geometría: ve Rasgos, Candidatos y Mira, sin Simulador. Aprende más despacio que la Vidente pero sin muletas: lo que sabe, lo sabe de verdad.',
     genome: make('plantilla-sniper', 'Francotirador', [
-      B('f', 'eye.features'), B('c', 'eye.candidates'), B('d', 'dense', { units: 32, activation: 'tanh' }), B('ch', 'hand.choose'),
+      B('f', 'eye.features'), B('c', 'eye.candidates'), B('mi', 'eye.aim'), B('d', 'dense', { units: 32, activation: 'tanh' }), B('ch', 'hand.choose'),
       B('m', 'eye.moves'), B('md', 'dense', { units: 16, activation: 'tanh' }), B('fm', 'foot.move', { adjust: false }),
-    ], [W('f', 'd'), W('c', 'd'), W('d', 'ch'), W('m', 'md'), W('md', 'fm')], {}, 101),
+    ], [W('f', 'd'), W('c', 'd'), W('mi', 'd'), W('d', 'ch'), W('m', 'md'), W('md', 'fm')], { learning: { gradient: { lr: 0.03 } } }, 101),
   },
   turtle: {
     name: '🐢 Tortuga con memoria',

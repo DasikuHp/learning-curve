@@ -24,7 +24,8 @@ const idOf = (g, t) => (g.blocks.find((b) => b.type === t) || {}).id;
 
 // ---------- añadir capa sobre un cable ----------
 check('insertOnWire: A → B pasa a A → nuevo → B y B conserva el orden de sus entradas', () => {
-  const g = tpl('sniper'); // d recibe f (cable 0) y c (cable 1)
+  const s0 = tpl('sniper'); // sin Mira, d recibe f (cable 0) y c (cable 1)
+  const g = { ...s0, blocks: s0.blocks.filter((b) => b.type !== 'eye.aim'), wires: s0.wires.filter((w) => w.from !== 'mi') };
   const i = g.wires.findIndex((w) => w.from === 'c' && w.to === 'd');
   const r = M.insertOnWire(g, i, 'dense', CAT);
   assert.equal(r.error, null);

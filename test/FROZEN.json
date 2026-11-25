@@ -86,6 +86,7 @@
   "test/ui-arreglos-p0-b.spec.mjs": "080a9ea78832baf1cb27692c61df40c926759e92727e72aa4e049e63a99b5294",
   "test/ui-arreglos-p0.spec.mjs": "46aa0969c46376390633d67cee7fae18dd72e42a2bd7e968a8a7fe39e4023abe",
   "test/ui-cirugia.spec.mjs": "481addfc477dc8ae4d7a4c20994f72ce00661f0b1872694305c38dada10fddba",
+  "test/ui-coach.spec.mjs": "3a90cddc056856012518fc04e36b7f9f5e8c283d79ddece57fed2e32b12d9c88",
   "test/ui-dinastias.spec.mjs": "d16de24aa964d78fcbac686f0bd094557ca7225e667bba25a1575873e2898d55",
   "test/ui-editor-extra.spec.mjs": "63b05d21a366f9d0c954003476555a13f29b331a711fca83680b9f3701ba6609",
   "test/ui-editor.spec.mjs": "4340d2d24ff001899740576fd761401526335612026de78e593115d244496f25",
