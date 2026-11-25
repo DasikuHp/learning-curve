@@ -35,7 +35,7 @@ Cada partida guardada es un mundo con sus redes, su trono y su historia, y empie
 | 1. Crear | 2. Entrenar |
 | :---: | :---: |
 | <img src="docs/media/crear.png" width="420"> | <img src="docs/media/entrenar.png" width="420"> |
-| El editor de redes: bloques a la izquierda, el grafo en el centro y un banco de pruebas que enseña qué tiro escoge la red y por qué. | Una Vidente nueva entrenando 300 partidas contra `chaos`: sus victorias pasan de casi ninguna a un 65 %. Después de cada lote la red "sueña" y aprende, y la interfaz dice qué bloque cambió más. |
+| El editor de redes: bloques a la izquierda, el grafo en el centro y un banco de pruebas que enseña qué tiro escoge la red y por qué. | Una Vidente nueva entrena 300 partidas con la receta por defecto: sin reina, contra Vidente 1 y contra sí misma. La recompensa sube de 0 a casi 4 y las victorias, de la mitad al 75 %. Después de cada lote la red "sueña" y aprende, y la interfaz dice qué bloque cambió más. |
 
 | 3. Duelo | 4. Trono |
 | :---: | :---: |
