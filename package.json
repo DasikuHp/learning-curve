@@ -12,5 +12,5 @@
     "test:agents": "node test/agents.spec.mjs",
     "spectate": "node tools/room-debug.mjs"
   },
-  "license": "GPL-3.0-or-later"
+  "license": "UNLICENSED"
 }

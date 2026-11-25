@@ -1,0 +1,32 @@
+Copyright (c) 2026 DasikuHp. Todos los derechos reservados.
+
+Este repositorio es público solo para que se pueda ver el código como muestra
+de mi trabajo. Verlo no da ningún derecho a usarlo.
+
+Sin una licencia previa y por escrito del autor no está permitido:
+
+  - copiar, modificar o adaptar el código, total o parcialmente;
+  - distribuirlo, publicarlo o compartirlo por cualquier medio;
+  - usarlo en otro proyecto, personal o comercial.
+
+Las licencias de uso son de pago. Para pedir una: dasikuhp@gmail.com
+
+Las condiciones de servicio de GitHub permiten a otros usuarios ver este
+repositorio y hacer un fork dentro de GitHub. Eso no da ningún otro derecho
+sobre el código.
+
+Excepción: las librerías de public/vendor (GSAP, Motion, tsParticles y Lenis)
+no son mías y conservan sus propias licencias; ver public/vendor/VENDOR.md.
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2026 DasikuHp. All rights reserved.
+
+This repository is public for viewing only, as a sample of my work. Copying,
+modifying, distributing or using this code, in whole or in part, requires a
+paid license granted in writing by the author (dasikuhp@gmail.com). GitHub's
+Terms of Service allow viewing and forking this repository on GitHub; that
+grants no other rights.
+
+Exception: the third-party libraries in public/vendor (GSAP, Motion,
+tsParticles and Lenis) keep their own licenses; see public/vendor/VENDOR.md.
