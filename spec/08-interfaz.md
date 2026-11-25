@@ -1,7 +1,7 @@
 # 08 — Interfaz: lo que la interfaz puede pedir y ver (REST + SSE del laboratorio)
 
 > Contrato exacto de `evo/api.js` (montado en `server/server.js`), `agents/net.js` y las ampliaciones
-> del `snapshot` de sala. la interfaz construye `public/evo.html` sobre esto y **solo** sobre esto.
+> del `snapshot` de sala. La interfaz construye `public/evo.html` sobre esto y **solo** sobre esto.
 > Errores: `400 {error, code, errors?}` (validación), `404`, `409` (conflicto: red entrenando, id
 > repetido), nunca `500` por una entrada mala. Cuerpos JSON; `/api/lab/*` admite hasta 48 MB.
 

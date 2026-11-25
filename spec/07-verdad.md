@@ -102,7 +102,7 @@ red (`learn:false` siempre).
 
 ## 8. Lección del sueño ✅ (evento `lesson`)
 Del `update`: bloque con mayor `relChange` (`‖ΔW‖/‖W‖`); `bulb = relChange > lessonThreshold`.
-Frase (, con `compose`): "Lo que más cambió fue Instinto b3 (+12.3 %)"; refs = `update`.
+Frase (con `compose`): "Lo que más cambió fue Instinto b3 (+12.3 %)"; refs = `update`.
 
 ## 9. Neuronas con nombre ✅ (`GET/PUT /api/lab/nets/:id/neurons`)
 Para cada unidad de cada `dense`/memoria: correlación de Pearson de su activación con cada entrada

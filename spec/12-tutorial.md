@@ -1,8 +1,7 @@
 # 12 — Tutorial «Tu primera red» en el editor que se va encendiendo, y enchufar y desenchufar cables
 
 > **Hecho** (código en `public/js/game/tutorial/`, pruebas en `test/ui-tutorial.spec.mjs` y
-> `tools/sondeo-tutorial.mjs`;, fila «»). Propuesta (2026-09-25), **aprobada con cambios** (respuestas en §6 y en, fila
-> «»). El cambio grande: no hay «modo taller» que construya el editor pieza a pieza, sino **el editor oficial en
+> `tools/sondeo-tutorial.mjs`). Propuesta (2026-09-25), **aprobada con cambios** (respuestas en §6). El cambio grande: no hay «modo taller» que construya el editor pieza a pieza, sino **el editor oficial en
 > penumbra que se va encendiendo** (§4.1, idea y maqueta del usuario). Sustituye a la guía (una tarjeta en
 > la esquina del editor, `public/js/lab/coach.js`), pero aprovecha su lógica pura.
 
@@ -51,7 +50,7 @@ JavaScript):
 | 14 | Blender · manual, «Editing Nodes» · docs.blender.org/manual/en/latest/interface/controls/nodes/editing.html | Para desenchufar: *"Drag the link away from its input socket and let it go"* (arrastra el cable fuera de su entrada y suéltalo). Ctrl + botón derecho, trazando una raya, corta cables. Si sueltas un nodo encima de un cable, se mete en medio. | Los mismos gestos (§5). |
 | 15 | Unreal Engine · «Blueprint Editor Cheat Sheet» · docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Blueprints/UserGuide/CheatSheet/ | Alt + clic en un punto quita todos sus cables. Ctrl + arrastrar mueve sus cables a otro sitio. | Alt + clic, igual (§5). |
 
-Siguen valiendo las fuentes (, fila «»): Bret Victor (enseñar los datos), Nicky Case
+Siguen valiendo las fuentes: Bret Victor (enseñar los datos), Nicky Case
 (empezar por una pregunta, apostar antes de ver, caja de arena al final), Andersen et al. CHI 2012 (el tutorial compensa
 en juegos complejos y pegado a lo que enseña), Human Resource Machine, el 1-1 de Mario, el giro de Hayashida y la ayuda
 que se retira (Renkl y Atkinson).
@@ -76,7 +75,7 @@ que se retira (Renkl y Atkinson).
 ## 4. Diseño: el editor que se va encendiendo
 
 ### 4.1 Cómo se ve
-Maqueta del usuario (, `REFERENCIATUTORIAL.png` en la raíz): el editor de siempre, oscurecido; la zona de plantillas con un halo azul que brilla; una
+Maqueta del usuario: el editor de siempre, oscurecido; la zona de plantillas con un halo azul que brilla; una
 línea fina con un punto brillante en el borde de la zona lleva a una **ventana del Sistema** con «1/4», el título («Elige
 una plantilla»), el texto, los puntos de avance y un botón redondo azul **→**.
 - **Nueva partida → Desde cero** abre el editor **oficial**, entero pero **a oscuras**. Hay tres luces:

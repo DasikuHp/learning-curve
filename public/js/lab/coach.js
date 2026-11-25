@@ -1,6 +1,5 @@
 // Guía «Tu primera red»: lo que ve quien empieza Desde cero. Lo que se pidió: el tutorial "sigue sin ser
-// didáctico y explicativo; busca bien cómo se hace un buen tutorial". Lo que sale de la investigación (, fila
-// "", con fuentes):
+// didáctico y explicativo; busca bien cómo se hace un buen tutorial". Lo que sale de la investigación (con fuentes):
 //  - una pregunta antes de cada cosa (Nicky Case: "make them love your question");
 //  - de lo concreto a lo general, una pieza nueva cada vez y explicada donde se usa (Bret Victor, "start constant, then
 //    vary"; Human Resource Machine empieza con dos órdenes; Andersen et al., CHI 2012: tutoriales pegados a lo que enseñan);

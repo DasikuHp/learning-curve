@@ -1,8 +1,8 @@
 # 00 — Arquitectura del laboratorio
 
-> Contrato compartido. Lo escribe . Lo usan: (tests y código
-> crítico), (interfaz) y cualquier agente externo. Estado: **borrador para revisión del usuario**.
-> Leyenda: ✅ decidido por el usuario · 🧭 · ❓ pregunta abierta.
+> Contrato compartido. Lo usan los tests, el código crítico, la interfaz y cualquier agente
+> externo. Estado: **borrador para revisión del usuario**.
+> Leyenda: ✅ decidido por el usuario · 🧭 propuesta · ❓ pregunta abierta.
 
 ## 0. Convenciones
 - **Claves de datos en inglés** (`blocks`, `wires`, `weights`, `soldierId`…), igual que el código y la

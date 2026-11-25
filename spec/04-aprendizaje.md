@@ -49,7 +49,7 @@ p. ej. `survive` alto → "cobarde: se esconde tras los muros y dispara poco".
   `reward` registran valor **crudo y normalizado**.
 - Retorno: `G_t = Σ_k γ^(k−t) r_k` sobre la secuencia de decisiones **del soldado** (`shoot`, `move`,
   `shoot`, …). Ventaja `A_t = G_t − b_t`: `b = V` (`hand.value`) · media móvil EMA 0.05 · 0. La media móvil **empieza
-  en 0** (la primera ventaja de una red es `G − 0`;, 2026-09-24), se guarda en `optim.json` (`mean`) y sigue de
+  en 0** (la primera ventaja de una red es `G − 0`; 2026-09-24), se guarda en `optim.json` (`mean`) y sigue de
   un lote al siguiente; un `optim.json` antiguo sin `mean` empieza también en 0. Adam empieza en `t = 0` (el primer paso
   es `t = 1`, como en Kingma y Ba 2015): el primer paso mueve cada parámetro `−lr·g/(|g|+ε)`.
 - `milestones` (hitos anti-olvido): cuando la tasa de victoria móvil (50 partidas) contra el

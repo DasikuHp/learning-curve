@@ -40,8 +40,8 @@ console.log(describeCheck(fz));
 if (!fz.ok) { console.log('\nFAIL ✘ (tests congelados modificados: OK del usuario + motivo escrito + tools/freeze.mjs)'); process.exit(1); }
 if (args.includes('--check-only')) process.exit(0);
 
-// carpetas gw-* de TEMP que había antes de la batería: al acabar se borran solo las que haya creado ella (, decisión
-// del usuario). Las de la prueba de mutantes (gw-mutants-*) no se tocan: no se corre la batería a la vez que los mutantes
+// carpetas gw-* de TEMP que había antes de la batería: al acabar se borran solo las que haya creado ella
+// (decisión del usuario). Las de la prueba de mutantes (gw-mutants-*) no se tocan: no se corre la batería a la vez que los mutantes
 const gwDirs = () => { try { return readdirSync(tmpdir()).filter((n) => n.startsWith('gw-')); } catch { return []; } };
 const before = new Set(gwDirs());
 

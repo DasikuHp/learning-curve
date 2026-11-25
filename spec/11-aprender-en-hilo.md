@@ -1,11 +1,12 @@
 # 11 — Aprender en un hilo
 
 > Decisión del usuario: "Aprender en un hilo", **ahora, antes de P3**. `hilos.spec` se queda como está.
-> premisas medidas (§0), alcance cerrado (§1, con las exhibiciones) y `hilos-c` en rojo y congelado (§3).
+> Contiene las premisas medidas (§0), el alcance cerrado (§1, con las exhibiciones) y `hilos-c` en rojo y
+> congelado (§3).
 
 ## 0. Por qué
 Con "hilos para todo" (spec/04 §5.1) el servidor juega en su grupo de hilos, pero **aprende en su hilo principal**, y
-mientras aprende no contesta a nada. Medido el 2026-09-24 (, con el código de P1b y la máquina libre; "redes
+mientras aprende no contesta a nada. Medido el 2026-09-24 (con el código de P1b y la máquina libre; "redes
 lentas" = Vidente con Imaginación de 64 candidatos y Simulador fino; sondeo en el proceso, sin grupo de hilos):
 - sueño de un entreno turbo de 3 soldados (de la última partida del lote al evento `sleep`): lote 4, **0,15–0,18 s**, y
   0,37–0,50 s el que lleva la partida de muestra; lote 8, 0,27–0,33 s y 0,56–0,63 s. (Antes se medía 0,85 s por lote
@@ -81,7 +82,7 @@ En el proceso, con un grupo de hilos propio y un espía que anota los mensajes (
 5. Paso de evolución (turbo, 1 soldado, semilla 14): un mensaje `pack` y la misma partida de muestra que sin grupo.
 6. Exhibición con `learn: true`: un mensaje `learn`, la red ocupada mientras aprende y los pesos de aprender en el proceso.
 7. Un mensaje `learn` que falla en el hilo: el entreno acaba en `error` con el mensaje; el duelo falla y suelta las redes.
-Medido contra el código de hoy (, con una prueba de mutantes corriendo a la vez): en rojo del 1 al 3 por la latencia (1 491, 1 690 y 2 018 ms; premisas 1 528 y
+Medido contra el código de hoy (con una prueba de mutantes corriendo a la vez): en rojo del 1 al 3 por la latencia (1 491, 1 690 y 2 018 ms; premisas 1 528 y
 1 664 ms) y del 4 al 7 porque no llega ningún mensaje; los oráculos en verde y lo bit a bit en verde (hoy trivial).
 
 ## 4. Mutantes

@@ -1,5 +1,4 @@
-// Huecos de mutantes tras la revisión y de los arreglos (, "Revisión" y
-// "R2–R5"): el 409 de una red ocupada en las rutas que no lo probaban (pedir hijos, operar ×3, examinar, criar,
+// Huecos de mutantes tras la revisión y de los arreglos R2–R5: el 409 de una red ocupada en las rutas que no lo probaban (pedir hijos, operar ×3, examinar, criar,
 // reto de dinastía, la reina entrenando), el nombre de la red en el mensaje y la rival de las copias en una
 // exhibición (una persona, una red sentada con addagent, un agente). Congelado.
 // Uso: node test/arreglos-ocupada-extra-b.spec.mjs [http://localhost:8791]   (sin URL, solo las partes en proceso)

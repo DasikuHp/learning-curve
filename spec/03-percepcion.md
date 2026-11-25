@@ -1,7 +1,7 @@
 # 03 — Percepción: los 8 ojos, 🎲 Imaginación, destinos, decisión (F3)
 
 > Contrato exacto de `shared/percept.js`, `shared/policy.js`, `agents/net.js`.
-> rondas 1, 2, 7, 8; §4.3, §4.6. Los números de §8 salen del experimento desechable (2026-09-22).
+> Los números de §8 salen del experimento desechable (2026-09-22).
 
 ## 1. Marco del soldado (todo se ve "hacia delante")
 Todos los ojos se expresan en el **marco del soldado**: el eje x apunta hacia el enemigo. Para el

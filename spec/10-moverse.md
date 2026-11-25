@@ -1,6 +1,6 @@
 # 10 — Moverse solo donde se puede (P1b, 2026-09-24)
 
-Decisiones del usuario (, fila "Moverse solo donde se puede"). Nace del mutante geometry 68: un soldado pegado al
+Decisiones del usuario ("Moverse solo donde se puede"). Nace del mutante geometry 68: un soldado pegado al
 borde que pedía salir se deslizaba 0,05 u. "Castigarle por no ser consciente; ya que es consciente del mapa, solo moverse
 donde sea posible":
 - Pedir un sitio **imposible** = **pierde el movimiento** (se queda donde está) **y** la red recibe un **castigo**.
