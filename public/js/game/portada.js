@@ -1,4 +1,4 @@
-// Portada (P5): fondo animado (el plano de Graphwar con curvas que se trazan solas y polvo que huye del ratón) y la
+// Portada (P5): fondo animado (el plano cartesiano con curvas que se trazan solas y polvo que huye del ratón) y la
 // constelación de la red que reina en el mundo: sus bloques de verdad (el tamaño de cada estrella = cuántos pesos tiene)
 // y, si ha jugado, sus pulsos: la activación media de cada bloque en las decisiones de su última partida, una tras otra.
 // Todo se para con la pestaña oculta y respeta "reducir movimiento" (un solo dibujo quieto).

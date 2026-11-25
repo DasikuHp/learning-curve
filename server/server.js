@@ -210,6 +210,6 @@ const DEMO_MAX_ROOMS = 20;
 // Solo escucha en este equipo salvo que se pida otra cosa (HOST=0.0.0.0 en un servidor).
 const HOST = process.env.HOST || '127.0.0.1';
 server.listen(PORT, HOST, () => {
-  console.log(`⚔️  Graphwar Agents en http://localhost:${PORT}`);
+  console.log(`⚔️  Learning Curve en http://localhost:${PORT}`);
   console.log(`    API de agentes: ${C.MODES.FUNCTION ? 'POST /api/rooms/:code/fire' : ''}`);
 });

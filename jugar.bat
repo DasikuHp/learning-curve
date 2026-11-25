@@ -1,5 +1,5 @@
 @echo off
-REM Graphwar Agents - doble clic y a jugar (no necesitas abrir terminal ni node a mano)
+REM Learning Curve - doble clic y a jugar (no necesitas abrir terminal ni node a mano)
 cd /d "%~dp0"
 where node >nul 2>nul
 if errorlevel 1 (

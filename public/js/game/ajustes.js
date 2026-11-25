@@ -1,5 +1,5 @@
 // Ajustes del juego (P5): se guardan en este navegador. Cada opción dice qué cambia, con un ejemplo.
-const KEY = 'graphwar.ajustes';
+const KEY = 'learning-curve.ajustes';
 export const SETTINGS = [
   { key: 'quality', name: 'Calidad gráfica', options: [
     { v: 'alta', name: 'Alta', help: 'Fondo animado con todas sus partículas y la constelación latiendo. Para un ordenador normal.' },

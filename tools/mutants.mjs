@@ -177,7 +177,7 @@ function copyRepo(root, workDir) {
     filter: (src) => {
       const name = basename(src);
       if (SKIP_DIRS.has(name)) return false;
-      if (name === '_battery.log' || name === '.server.pid' || name === '.graphwar-bat-pid') return false;
+      if (name === '_battery.log' || name === '.server.pid' || name === '.jugar-bat-pid') return false;
       return true;
     },
   });

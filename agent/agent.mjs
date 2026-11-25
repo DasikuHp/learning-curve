@@ -1,4 +1,4 @@
-// CLI para que un agente IA (p. ej. Cline) juegue Graphwar por HTTP.
+// CLI para que un agente IA (p. ej. Cline) juegue a Learning Curve por HTTP.
 // Uso:
 //   node agent/agent.mjs rooms
 //   node agent/agent.mjs create --name "Sala Cline"
@@ -24,7 +24,7 @@ const opt = (name, dflt) => {
 };
 
 // --url permite apuntar a otro servidor; --session permite varias instancias de agente en paralelo
-const BASE = process.env.GRAPHWAR_URL || opt('url', 'http://localhost:8787');
+const BASE = process.env.LEARNING_CURVE_URL || opt('url', 'http://localhost:8787');
 const SESSION = join(dirname(fileURLToPath(import.meta.url)), opt('session', '.agent-session.json'));
 
 async function api(path, method = 'GET', body = null) {
@@ -116,7 +116,7 @@ async function main() {
       break;
     }
     default:
-      console.log(`Graphwar Agents — CLI de agente remoto
+      console.log(`Learning Curve — CLI de agente remoto
 
 Uso: node agent/agent.mjs <comando> [opciones]
 

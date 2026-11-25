@@ -60,7 +60,7 @@ if (!cat.ok) {
     for (const a of document.querySelectorAll('.lab-nav [data-view]')) {
       if (a.dataset.view === r.name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     }
-    document.title = `${{ editor: 'Editor de redes', entreno: 'Entreno', evolucion: 'Evolución', trono: 'Trono y duelos', dinastias: 'Dinastías', verdad: 'Verdad', cirugia: 'Cirugía' }[r.name] || 'Laboratorio'} · Graphwar`;
+    document.title = `${{ editor: 'Editor de redes', entreno: 'Entreno', evolucion: 'Evolución', trono: 'Trono y duelos', dinastias: 'Dinastías', verdad: 'Verdad', cirugia: 'Cirugía' }[r.name] || 'Laboratorio'} · Learning Curve`;
     if (r.name === 'inicio') home.start(); // vuelve a pedir redes y trono; el SSE se abre una vez
     if (r.name === 'entreno') training.start();
     if (r.name === 'evolucion') evolution.start();

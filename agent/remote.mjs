@@ -14,7 +14,7 @@ import { searchShot } from '../agents/lib.js';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf('--' + n); return i >= 0 ? args[i + 1] : d; };
-const BASE = process.env.GRAPHWAR_URL || opt('url', 'http://localhost:8787');
+const BASE = process.env.LEARNING_CURVE_URL || opt('url', 'http://localhost:8787');
 const ROOM = (opt('room', '') || '').toUpperCase();
 const NAME = opt('name', 'Remoto');
 const TEAM = opt('team', 'auto');

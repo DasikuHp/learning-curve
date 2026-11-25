@@ -92,7 +92,7 @@ async function startLayers() {
 async function showPortada() {
   $('game').hidden = true;
   $('portada').hidden = false;
-  document.title = 'Graphwar · Entrenador de redes';
+  document.title = 'Learning Curve · Entrenador de redes';
   await loadWorlds();
   renderMenu();
   if (!introDone) { introDone = true; introPortada({ title: $('portada').querySelector('.p-title'), sub: $('portada').querySelector('.p-sub'), items: [...$('menu').children] }); }
@@ -254,7 +254,7 @@ async function showStage(r) {
   el.hidden = false;
   if (CLASS[key]) el.className = CLASS[key];
   if (!views[key]) views[key] = MOUNT[key](el);
-  document.title = `${st.n} · ${st.short} · Graphwar`;
+  document.title = `${st.n} · ${st.short} · Learning Curve`;
   const v = views[key];
   if (v && v.slot) v.slot($('stageSlot')); // la vista pone en la cabecera lo suyo (el editor: nombre, deshacer, Guardar)
   if (key === 'crear/editor') {
