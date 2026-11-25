@@ -30,12 +30,13 @@ export const TEMPLATES = {
   },
   seer: {
     name: '🔮 Vidente',
-    why: 'Ve el futuro de cada tiro con el Simulador y lleva Corazonada: aprende en cientos de decisiones (en el experimento, ~330).',
+    why: 'Ve el futuro de cada tiro con el Simulador y lleva Corazonada. No lleva Ajustar: el Simulador ve el tiro exacto, y empujarlo después hace fallar tiros que iban a dar. Contra chaos aprende a escoger el tiro que mata en unas 150 partidas.',
     genome: make('plantilla-vidente', 'Vidente', [
       B('f', 'eye.features'), B('c', 'eye.candidates'), B('s', 'eye.simulator'), B('cd', 'dense', { units: 32, activation: 'tanh' }),
-      B('ch', 'hand.choose'), B('aj', 'hand.adjust', { params: 3 }), B('dv', 'dense', { units: 16, activation: 'tanh' }), B('v', 'hand.value'),
+      B('ch', 'hand.choose'), B('dv', 'dense', { units: 16, activation: 'tanh' }), B('v', 'hand.value'),
       B('m', 'eye.moves'), B('md', 'dense', { units: 16, activation: 'tanh' }), B('fm', 'foot.move', { adjust: true }),
-    ], [W('f', 'cd'), W('c', 'cd'), W('s', 'cd'), W('cd', 'ch'), W('cd', 'aj'), W('f', 'dv'), W('dv', 'v'), W('m', 'md'), W('f', 'md'), W('md', 'fm')], {}, 103),
+    ], [W('f', 'cd'), W('c', 'cd'), W('s', 'cd'), W('cd', 'ch'), W('f', 'dv'), W('dv', 'v'), W('m', 'md'), W('f', 'md'), W('md', 'fm')],
+    { learning: { gradient: { lr: 0.01 } } }, 103),
   },
   empty: {
     name: '⬜ Vacía',

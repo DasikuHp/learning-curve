@@ -34,6 +34,8 @@ const B = (id, type, params = {}) => ({ id, type, params });
 const W = (from, to) => ({ from, to });
 const clone = (v) => JSON.parse(JSON.stringify(v));
 const withId = (t, id) => ({ ...clone(TEMPLATES[t].genome), id, name: id });
+// la Vidente con Ajustar (la plantilla ya no lo lleva): para probar el ajuste del disparo
+const seerWithAdjust = (id) => { const g = withId('seer', id); return repair({ ...g, blocks: [...g.blocks, B('aj', 'hand.adjust', { params: 3 })], wires: [...g.wires, W('cd', 'aj')] }, makeRng(103)).genome; };
 
 function scene() {
   const mk = (id, ownerId, team, x, y, alive = true) => ({ id, ownerId, team, x, y, alive, lastExpr: '', turns: 1 });
@@ -67,7 +69,7 @@ await check('softmaxT y sampleIndex: probabilidades con temperatura y muestreo a
 
 // ---------- decideShot ----------
 await check('decideShot (Vidente): elección, margen, ajuste, valor, logp y determinismo; el rng se consume en el orden fijado', () => {
-  const g = withId('seer', 'vidente-1'); const st = scene();
+  const g = seerWithAdjust('vidente-1'); const st = scene();
   const net = compile(g);
   const r = pol.decideShot({ net, genome: g, state: st, soldierId: 'me', memory: net.zeroState(), team: null, rng: makeRng(7), attribution: true });
   const d = r.decision;

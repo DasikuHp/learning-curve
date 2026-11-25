@@ -88,7 +88,7 @@ Nada se bloquea por nivel ✅: la interfaz filtra por `level`; el servidor acept
 |---|---|---|
 | 🎯 Francotirador `sniper` | Rasgos + Candidatos → Instinto 32 tanh → Elegir; Destinos → Moverse | "Solo geometría: aprende despacio pero sin muletas" |
 | 🐢 Tortuga con memoria `turtle` | Rasgos + Radar + Reloj → GRU 16 → Instinto 24 → Elegir; Destinos + GRU → Moverse; `survive` 0.5, `cover` 0.3 | "Recuerda de dónde le dispararon y se esconde" |
-| 🔮 Vidente `seer` | Rasgos + Candidatos + **Simulador** → Instinto 32 → Elegir + Ajustar; Corazonada; Destinos → Moverse | "Ve el futuro de cada tiro: aprende en cientos de decisiones" |
+| 🔮 Vidente `seer` | Rasgos + Candidatos + **Simulador** → Instinto 32 → Elegir (sin Ajustar: movería el tiro que el Simulador vio); Corazonada; Destinos → Moverse; lr 0,01 | "Ve el futuro de cada tiro: aprende en cientos de decisiones" |
 | ⬜ Vacía `empty` | Rasgos + Candidatos → Elegir | "Lo mínimo que puede disparar; construye tú el resto" |
 
 ## 8. Qué desbloquea cada fase para la interfaz (recordatorio)

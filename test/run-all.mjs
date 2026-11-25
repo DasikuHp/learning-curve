@@ -71,6 +71,7 @@ try {
   results.push(await run('política (F3): decisión, agente-red, almacén, sala', [join(ROOT, 'test', 'politica.spec.mjs')]));
   results.push(await run('API del laboratorio: catálogo, plantillas, redes', [join(ROOT, 'test', 'api-lab.spec.mjs'), BASE]));
   results.push(await run('aprendizaje (F4): recompensa, gradiente, tareas, entrenador', [join(ROOT, 'test', 'aprendizaje.spec.mjs')]));
+  results.push(await run('la Vidente aprende: 150 partidas contra chaos y examen antes y después', [join(ROOT, 'test', 'aprende.spec.mjs')]));
   results.push(await run('aprendizaje (F4): casos extra', [join(ROOT, 'test', 'aprendizaje-extra.spec.mjs')]));
   results.push(await run('entrenador (F4): casos extra 2', [join(ROOT, 'test', 'entrenador-extra.spec.mjs')]));
   results.push(await run('entrenador (F4): casos extra 3', [join(ROOT, 'test', 'entrenador-extra-b.spec.mjs')]));
