@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Learning Curve: diseña una red neuronal, entrénala con aprendizaje por refuerzo y mírala aprender a disparar funciones matemáticas. Mecánica inspirada en Graphwar (Lucas Catabriga).",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "node server/server.js",
     "selfplay": "node arena/selfplay.mjs",

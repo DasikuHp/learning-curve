@@ -1,0 +1,20 @@
+# Demo pública en Render (plan gratuito). El disco se borra en cada reinicio: el servidor
+# arranca con las redes de ejemplo de demo/seed y los límites de PUBLIC_DEMO.
+services:
+  - type: web
+    name: learning-curve
+    runtime: node
+    plan: free
+    buildCommand: node --version
+    startCommand: node server/server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: PUBLIC_DEMO
+        value: "true"
+      - key: HOST
+        value: 0.0.0.0
+      - key: GW_EVO_DIR
+        value: /tmp/learning-curve
