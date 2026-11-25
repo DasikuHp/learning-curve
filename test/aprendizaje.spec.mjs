@@ -302,10 +302,11 @@ await check('Corazonada: con recompensa constante 1, V → 1 ± 0.01', () => {
 const saveTemplate = (key, id) => { const r = store.saveNet({ ...clone(TEMPLATES[key].genome), id, name: id }); assert.ok(r.ok, JSON.stringify(r)); return id; };
 await check('playGame con una red: eventos (§9.1) y trayectorias (§9.2) exactos y enlazados', () => {
   saveTemplate('seer', 'vid-a');
-  const g = playGame({ seed: 40, left: { type: 'net', netId: 'vid-a' }, right: { type: 'sniper' }, soldiers: 2 });
+  // semilla 42: una partida en la que los dos soldados de la red llegan a decidir (con la Vidente sin Ajustar, en la 40 uno muere antes)
+  const g = playGame({ seed: 42, left: { type: 'net', netId: 'vid-a' }, right: { type: 'sniper' }, soldiers: 2 });
   const ev = g.events;
   assert.ok(ev.length > 5 && ev[0].type === 'game.start' && ev[0].id === 1 && ev.every((e, i) => e.id === i + 1 && e.game === g.room.gameId));
-  assert.ok(/^g-40-/.test(g.room.gameId));
+  assert.ok(/^g-42-/.test(g.room.gameId));
   const p = g.room.players.find((x) => x.agentType === 'net');
   const tr = g.trajectories[p.id];
   assert.ok(tr && tr.netId === 'vid-a' && Object.keys(tr.soldiers).length === 2);
@@ -326,7 +327,7 @@ await check('playGame con una red: eventos (§9.1) y trayectorias (§9.2) exacto
   const kills = ev.filter((e) => e.type === 'kill'), deaths = ev.filter((e) => e.type === 'death');
   assert.equal(kills.length + ev.filter((e) => e.type === 'friendlyFire').length, deaths.length);
   for (const k of kills) assert.equal(ev[k.data.shotEventId - 1].type, 'shot');
-  const g2 = playGame({ seed: 40, left: { type: 'net', netId: 'vid-a' }, right: { type: 'sniper' }, soldiers: 2 });
+  const g2 = playGame({ seed: 42, left: { type: 'net', netId: 'vid-a' }, right: { type: 'sniper' }, soldiers: 2 });
   assert.deepEqual(g2.events.map((e) => [e.type, e.data && e.data.result && e.data.result.type, e.data && e.data.expr]), ev.map((e) => [e.type, e.data && e.data.result && e.data.result.type, e.data && e.data.expr]), 'determinista');
 });
 
