@@ -118,7 +118,7 @@ export const CHAPTERS = [
       text: 'Tu soldado (el blanco, «tu red») frente a un enemigo. Aquí verás al momento qué haría tu red con cada cambio que hagas. Ahora no hace nada: está vacía.' },
     { key: 'candidatos', kind: 'do', target: S.pal('eye.candidates'), present: ['paleta', 'grupo-eyes', 'ficha-bloque'], title: 'Que imagine tiros',
       text: () => co('ojos').ask, todo: 'Añade 🎯 Candidatos: en «Nuevo bloque», grupo Ojos (lo que ve). Pasa el ratón por encima y al lado te dice qué hace.',
-      gesture: { name: 'paleta', at: S.pal('eye.candidates') }, done: (x) => has(x.g, 'eye.candidates') || has(x.g, 'eye.simulator'),
+      gesture: { name: 'paleta', at: S.pal('eye.candidates') }, done: (x) => has(x.g, 'eye.candidates') || has(x.g, 'eye.simulator') || has(x.g, 'eye.aim'),
       help: { add: ['eye.candidates'] }, after: (x) => co('ojos').after(x) },
     { key: 'elegir', kind: 'do', target: S.pal('hand.choose'), present: ['grupo-hands', 'tarjeta'], title: 'Que escoja uno',
       text: () => `${co('manos').ask} Cada bloque que añades es una tarjeta en el lienzo.`, todo: 'Añade 🎯 Elegir (grupo Manos: lo que hace).',

@@ -27,7 +27,7 @@ export const STEPS = [
   { key: 'ojos', title: 'Que imagine tiros',
     ask: 'Abajo a la derecha, en el banco de pruebas, tu soldado (el blanco) tiene un enemigo enfrente. ¿Cómo decide una red adónde disparar? Ahora mismo no ve nada: está vacía.',
     todo: 'Añade 🎯 Candidatos (a la izquierda, en Ojos).', target: '.pal [data-add="eye.candidates"]', help: { add: ['eye.candidates'] },
-    done: (g) => has(g, 'eye.candidates') || has(g, 'eye.simulator'),
+    done: (g) => has(g, 'eye.candidates') || has(g, 'eye.simulator') || has(g, 'eye.aim'),
     after: (x) => `Cada turno, tu red se imagina ${x.cands ?? 'varios'} tiros posibles: rectas, senos, parábolas… Todavía no los usa nadie: falta quien escoja. De cada uno saca ${x.candDim ?? 'unos'} números (su familia, su forma, a qué distancia pasa de cada enemigo): eso es lo que «ve» una red, números.` },
   { key: 'manos', title: 'Que escoja uno',
     ask: 'Imaginar no es disparar. ¿Quién decide cuál de esos tiros sale?',

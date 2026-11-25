@@ -93,6 +93,8 @@ export const BLOCKS = {
     explain: 'Resumen de tus aliados vivos: cuántos, dónde, si tienen línea de tiro, cómo les fue el último disparo.', example: 'Vale para 1, 2, 3 o 4 soldados: siempre son 12 números.' },
   'eye.candidates': { type: 'eye.candidates', name: 'Candidatos', icon: '🎯', group: 'eyes', level: L.A, streams: { in: [], out: 'cand' }, params: [],
     explain: 'Los N disparos que imagina 🎲 Imaginación, cada uno con su familia (recta, parábola…) y sus parámetros. Obligatorio para Elegir.', example: 'Con N = 24, salen 24 filas de 12 números, una por candidato.' },
+  'eye.aim': { type: 'eye.aim', name: 'Mira', icon: '🔭', group: 'eyes', level: L.A, streams: { in: [], out: 'cand' }, params: [],
+    explain: 'Para cada candidato, a qué altura pasa su curva cuando llega a la x del enemigo: 1 si pasa justo por él, 0,13 si pasa a 1 u, casi 0 a 2 u. Mira la curva sin física (no ve muros ni rebotes), así que es más barata que el Simulador. Sin ella, una red que solo ve Candidatos apenas aprende a apuntar.', example: 'Una recta que pasa 0,35 u por encima del enemigo 1 llega con "cercanía al enemigo 1" ≈ 0,78; una que pasa a 2 u, ≈ 0.' },
   'eye.simulator': { type: 'eye.simulator', name: 'Simulador', icon: '🔮', group: 'eyes', level: L.A, streams: { in: [], out: 'cand' },
     explain: 'Para cada candidato, el futuro: ¿a cuántos enemigos mata? ¿y a cuántos aliados? (el tiro atraviesa a los soldados) ¿choca? ¿a qué distancia pasa del enemigo? Sin él, la red es "ciega": solo geometría.', example: 'Una recta que alinea a dos enemigos llega con "enemigos que mata 2": la red puede aprender a buscar la doble baja. Vidente (con Simulador) aprende en cientos de decisiones; ciega, en miles.',
     params: [{ key: 'fine', name: 'Simulación fina', type: 'bool', default: false, level: L.C, explain: 'Barrido fino (más exacto, 5× más lento) en vez del grueso.', example: 'El grueso ya acierta casi siempre; el fino solo para cirugía de precisión.' }] },
@@ -208,6 +210,7 @@ export function eyeDim(block, genome) {
     case 'eye.mates': return 12;
     case 'eye.candidates': return 12;
     case 'eye.simulator': return 10;
+    case 'eye.aim': return 2;
     case 'eye.moves': return 9;
     default: return 0;
   }

@@ -64,7 +64,7 @@ export function suppliers(genome, catalog, stream) {
   return (genome.blocks || []).filter((b) => !OUT_GROUPS.has(groupOf(catalog, b)) && st[b.id] === stream);
 }
 const NEED = {
-  cand: (catalog) => `algo que dé candidatos (los tiros que imagina): ${iconOf(catalog, 'eye.candidates')} Candidatos o ${iconOf(catalog, 'eye.simulator')} Simulador, en Ojos`,
+  cand: (catalog) => `algo que dé candidatos (los tiros que imagina): ${iconOf(catalog, 'eye.candidates')} Candidatos, ${iconOf(catalog, 'eye.simulator')} Simulador o ${iconOf(catalog, 'eye.aim')} Mira, en Ojos`,
   move: (catalog) => `algo que dé destinos (los sitios adonde moverse): ${iconOf(catalog, 'eye.moves')} Destinos, en Ojos`,
   ctx: (catalog) => `algo que dé contexto (lo que ve el soldado una vez por turno): ${iconOf(catalog, 'eye.features')} Rasgos, ${iconOf(catalog, 'eye.radar')} Radar… en Ojos, o un Instinto sobre ellos`,
   kv: () => 'algo que dé candidatos o destinos para resumir',
@@ -94,7 +94,7 @@ export function advice(genome, catalog, type) {
   const SIM_ADJUST = 'Ojo: el Simulador ve cada tiro tal cual y Ajustar lo mueve después de escogerlo, así que tiros que iban a dar fallan. En las pruebas, una Vidente con los dos juntos casi no aprendía; sin Ajustar, sí.';
   if (type === 'hand.adjust' && g.blocks.some((b) => b.type === 'eye.simulator')) return { can: true, why: SIM_ADJUST };
   if (type === 'eye.simulator' && g.blocks.some((b) => b.type === 'hand.adjust')) return { can: true, why: SIM_ADJUST };
-  if (e.group === 'eyes') return { can: true, why: `No recibe cables: después une su punto de salida a un Instinto${type === 'eye.candidates' || type === 'eye.simulator' ? ' o directamente a Elegir' : type === 'eye.moves' ? ' o directamente a Moverse' : ', una Memoria o una mano'}.` };
+  if (e.group === 'eyes') return { can: true, why: `No recibe cables: después une su punto de salida a un Instinto${type === 'eye.candidates' || type === 'eye.simulator' || type === 'eye.aim' ? ' o directamente a Elegir' : type === 'eye.moves' ? ' o directamente a Moverse' : ', una Memoria o una mano'}.` };
   const need = needs(type);
   if (need) {
     const have = need === 'kv' ? [...suppliers(g, catalog, 'cand'), ...suppliers(g, catalog, 'move')] : suppliers(g, catalog, need);
@@ -146,7 +146,7 @@ export function readiness(genome, catalog) {
   const cands = suppliers(g, catalog, 'cand');
   const ins = (id) => (g.wires || []).filter((w) => w.to === id).map((w) => w.from);
   const chooseFed = !!choose && ins(choose.id).some((x) => st[x] === 'cand') && !ins(choose.id).some((x) => st[x] === 'move' || st[x] === 'mix');
-  const seesShots = !!(has('eye.candidates') || has('eye.simulator'));
+  const seesShots = !!(has('eye.candidates') || has('eye.simulator') || has('eye.aim'));
   const out = [
     { key: 'shots', ok: seesShots, required: true, text: 'Imagina tiros: tiene Candidatos o Simulador',
       need: 'Añade 🎯 Candidatos (en Ojos): cada turno se imagina varios tiros posibles y los ve como números (familia, forma, puntería).', add: seesShots ? [] : ['eye.candidates'] },

@@ -407,7 +407,7 @@ export function mountEditor(root, { catalog, toast }) {
   function benchFacts() {
     const g = S.genome, d = S.bench.now && S.bench.now.ok ? S.bench.now.decision : null;
     if (!g) return {};
-    const cand = g.blocks.find((b) => b.type === 'eye.candidates' || b.type === 'eye.simulator');
+    const cand = g.blocks.find((b) => b.type === 'eye.candidates' || b.type === 'eye.simulator' || b.type === 'eye.aim');
     return {
       cands: d && d.phase !== 'move' && Array.isArray(d.candidates) ? d.candidates.length : (g.imagination && g.imagination.n) || null,
       candDim: cand && S.dims && S.dims[cand.id] ? S.dims[cand.id].dim : null,

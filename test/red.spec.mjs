@@ -117,7 +117,7 @@ const sigm = (x) => 1 / (1 + Math.exp(-x));
 
 // ---------- catálogo ----------
 await check('BLOCKS: los 24 tipos del catálogo con nombre, explicación, ejemplo, nivel y parámetros con rango', () => {
-  const types = ['eye.map', 'eye.features', 'eye.obstacles', 'eye.history', 'eye.radar', 'eye.clock', 'eye.mates', 'eye.candidates', 'eye.simulator', 'eye.moves',
+  const types = ['eye.map', 'eye.features', 'eye.obstacles', 'eye.history', 'eye.radar', 'eye.clock', 'eye.mates', 'eye.candidates', 'eye.simulator', 'eye.aim', 'eye.moves',
     'dense', 'concat', 'add', 'mul', 'skip', 'norm', 'attention', 'pool', 'echo', 'gru', 'lstm', 'teamMemory', 'hand.choose', 'hand.adjust', 'foot.move', 'hand.value'];
   for (const t of types) {
     const b = BLOCKS[t];

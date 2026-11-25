@@ -27,7 +27,7 @@ export const paramsAt = (entry, level) => ((entry && entry.params) || []).filter
 // los mismos prefijos que usan las plantillas (f, c, d, g, ch, m, fm…); si está cogido, d2, d3…
 const PREFIX = {
   'eye.map': 'map', 'eye.features': 'f', 'eye.obstacles': 'ob', 'eye.history': 'h', 'eye.radar': 'r', 'eye.clock': 'k',
-  'eye.mates': 'cm', 'eye.candidates': 'c', 'eye.simulator': 'sim', 'eye.moves': 'm',
+  'eye.mates': 'cm', 'eye.candidates': 'c', 'eye.simulator': 'sim', 'eye.aim': 'mi', 'eye.moves': 'm',
   dense: 'd', concat: 'cat', add: 'sum', mul: 'mul', skip: 'sk', norm: 'n', attention: 'at', pool: 'p',
   echo: 'e', gru: 'g', lstm: 'l', teamMemory: 'tm',
   'hand.choose': 'ch', 'hand.adjust': 'aj', 'foot.move': 'fm', 'hand.value': 'v',

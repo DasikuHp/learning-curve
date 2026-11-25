@@ -194,6 +194,18 @@ export function candidateFeatures(cand, ctx) {
   };
   return Float64Array.from([...oh, n[0], n[1], n[2], err(enemies[0]), err(enemies[1]), isOde ? 1 : 0]);
 }
+// Mira: cercanía nítida de la curva a cada enemigo, exp(−(e/0,7)²) con e = error vertical en su x (0,7 = radio de impacto).
+// 0 si es una EDO, si la expresión no se puede evaluar o si falta ese enemigo. Sin física: no ve muros ni rebotes.
+export function aimFeatures(cand, ctx) {
+  const { me, enemies } = ctxLocal(ctx);
+  const close = (e) => {
+    if (!e || cand.mode !== 'function') return 0;
+    const r = tryCompile(cand.exprLocal); if (!r.ok) return 0;
+    let v; try { v = r.f(e.l.x) - r.f(me.x) + me.y - e.l.y; } catch { return 0; }
+    return Number.isFinite(v) ? Math.exp(-((v / HIT_RADIUS) ** 2)) : 0;
+  };
+  return Float64Array.from([close(enemies[0]), close(enemies[1])]);
+}
 function polyline(points, team) {
   const out = [];
   let last = null;
@@ -407,7 +419,7 @@ export function observeNormalized(state, soldierId, g, { phase = 'shoot', cands 
   const N = g.imagination.n;
   const obs = { ctx: {}, cand: {}, move: {}, team: {}, candidates: null, destinations: null, sims: null };
   const eyes = g.blocks.filter((b) => b.type.startsWith('eye.'));
-  const needCand = phase === 'shoot' && eyes.some((b) => b.type === 'eye.candidates' || b.type === 'eye.simulator');
+  const needCand = phase === 'shoot' && eyes.some((b) => b.type === 'eye.candidates' || b.type === 'eye.simulator' || b.type === 'eye.aim');
   const needSim = phase === 'shoot' && eyes.some((b) => b.type === 'eye.simulator');
   if (phase === 'shoot') obs.candidates = cands || (needCand ? generateCandidates(state, soldier, g.imagination, rng) : null);
   if (needSim) obs.sims = sims || obs.candidates.map((c) => simulateCandidate(c, ctx, eyes.some((b) => b.type === 'eye.simulator' && b.params.fine)));
@@ -423,6 +435,7 @@ export function observeNormalized(state, soldierId, g, { phase = 'shoot', cands 
       case 'eye.mates': obs.ctx[b.id] = eyeMates(state, soldier, lc); break;
       case 'eye.map': obs.ctx[b.id] = eyeMap(state, soldier, lc, b.params); break;
       case 'eye.candidates': obs.cand[b.id] = obs.candidates ? obs.candidates.map((c) => candidateFeatures(c, ctx)) : Array.from({ length: N }, () => new Float64Array(dim)); break;
+      case 'eye.aim': obs.cand[b.id] = obs.candidates ? obs.candidates.map((c) => aimFeatures(c, ctx)) : Array.from({ length: N }, () => new Float64Array(dim)); break;
       case 'eye.simulator': obs.cand[b.id] = obs.sims ? obs.sims.map((s) => simulatorFeatures(s, ctx)) : Array.from({ length: N }, () => new Float64Array(dim)); break;
       case 'eye.moves': obs.move[b.id] = obs.destinations ? obs.destinations.map((d) => d.feat) : Array.from({ length: 9 }, () => new Float64Array(dim)); break;
       default: break;
@@ -457,6 +470,7 @@ export function eyeLayout(block) {
     case 'eye.clock': push('disparos de la partida', 'disparos sin bajas', 'mapas renovados', 'mis soldados vivos', 'enemigos vivos', 'diferencia de bajas', 'mis turnos', 'fase (0 disparar, 1 mover)'); break;
     case 'eye.mates': push('compañeros vivos', 'compañeros: media x', 'compañeros: media y', 'compañero más cercano', 'compañero más lejano', 'compañeros con línea de tiro', 'compañeros que mataron', 'compañeros con fuego amigo', 'compañeros: distancia mínima del último tiro', 'compañeros que se quedaron quietos', 'compañeros muertos', 'hay compañeros'); break;
     case 'eye.candidates': push('familia recta', 'familia parábola', 'familia seno', 'familia EDO', 'familia artillería', 'familia salvaje', 'parámetro 1', 'parámetro 2', 'parámetro 3', 'error al enemigo 1', 'error al enemigo 2', 'es una EDO'); break;
+    case 'eye.aim': push('cercanía al enemigo 1', 'cercanía al enemigo 2'); break;
     case 'eye.simulator': push('enemigos que mata', 'aliados que mata', 'choca con muro', 'choca con borde', 'otro final', 'distancia mínima al enemigo', 'x final', 'y final', 'longitud del tiro', 'mata al enemigo 1'); break;
     case 'eye.moves': push('desplazamiento x', 'desplazamiento y', 'es quedarse', 'imposible', 'enemigos que me verían', 'me alejo del enemigo 1', 'distancia al aliado más cercano', 'línea de tiro al enemigo 1', 'pegado a un muro'); break;
     case 'eye.map': {
