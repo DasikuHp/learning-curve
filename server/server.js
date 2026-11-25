@@ -1,12 +1,12 @@
 // Servidor HTTP: estáticos + API REST + SSE para clientes y agentes IA.
 // Sin dependencias externas: Node >= 18.
 import http from 'node:http';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, cpSync } from 'node:fs';
 import { extname, join, normalize, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rooms, getRoom, createRoom } from './rooms.js';
 import { listAgents } from '../agents/registry.js';
-import { labApi, onExhibitionOver } from '../evo/api.js';
+import { labApi, onExhibitionOver, initDemoSeeds } from '../evo/api.js';
 import { useThreads } from '../evo/threads.js';
 import { availableParallelism } from 'node:os';
 import { worldsRoute, startWorlds } from './worlds.js';
@@ -14,9 +14,17 @@ import * as C from '../shared/constants.js';
 
 // las partidas sin pantalla (duelos turbo, boletín, pre-torneo, entrenos turbo de 1 hilo) se juegan en hilos: el servidor
 // solo coordina y aprende, y sigue contestando mientras tanto
-useThreads(Math.max(2, Math.min(4, availableParallelism() - 1)));
+// (en la demo pública, uno solo: el servidor gratuito tiene poca memoria)
+useThreads(process.env.PUBLIC_DEMO === 'true' ? 1 : Math.max(2, Math.min(4, availableParallelism() - 1)));
+// demo pública con el laboratorio vacío (el disco del servidor se borra en cada reinicio):
+// se copian las redes de ejemplo que prepara tools/demo-seed.mjs
+const SEED = join(dirname(fileURLToPath(import.meta.url)), '..', 'demo', 'seed');
+if (process.env.PUBLIC_DEMO === 'true' && process.env.GW_EVO_DIR && existsSync(SEED) && !existsSync(join(process.env.GW_EVO_DIR, 'nets'))) {
+  cpSync(SEED, process.env.GW_EVO_DIR, { recursive: true });
+}
 // mundos (spec/09): lo de antes se archiva una vez (solo en la carpeta real) y se sigue en el último mundo abierto
 startWorlds();
+initDemoSeeds(); // en la demo pública, las redes que hay al arrancar son las de ejemplo
 
 const PORT = Number(process.env.PORT) || 8787;
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -29,10 +37,13 @@ const MIME = {
   '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png',
   '.ico': 'image/x-icon', '.json': 'application/json',
 };
+// Por defecto la API solo se llama desde la propia web (mismo origen) o desde programas como
+// agent/agent.mjs, a los que CORS no afecta. Para dejar que otra web la use desde el navegador:
+// CORS_ORIGIN=https://esa-web.example
 const CORS = {
-  'Access-Control-Allow-Origin': '*',
+  ...(process.env.CORS_ORIGIN ? { 'Access-Control-Allow-Origin': process.env.CORS_ORIGIN } : {}),
   'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Player-Token',
 };
 
 const json = (res, code, obj) => {
@@ -66,6 +77,16 @@ const readBody = (req) => new Promise((resolve) => {
 });
 const tooBig = (res) => json(res, 413, { error: `El cuerpo supera ${BODY_LIMIT} bytes.` });
 
+// Las acciones de un jugador que se unió por la API (persona o agente externo) llevan el
+// token que recibió en /join: sin él, cualquiera podría disparar o moverse en su nombre.
+// Los bots juegan dentro del servidor y no tienen token.
+function checkPlayer(room, pid, token) {
+  const p = room.players.find((x) => x.id === pid);
+  if (!p) return { status: 404, error: 'Jugador no encontrado en esta sala' };
+  if (!p.isBot && p.token !== token) return { status: 403, error: 'Token no válido para este jugador' };
+  return null;
+}
+
 const roomList = () => [...rooms.values()].map((r) => ({
   code: r.code, name: r.name, phase: r.phase,
   players: r.players.map((p) => ({ name: p.name, team: p.team, isBot: p.isBot })),
@@ -77,6 +98,10 @@ async function api(req, res, parts, url) {
   if (parts[1] === 'health') return json(res, 200, { ok: true, rooms: rooms.size });
   if (parts[1] === 'agents') return json(res, 200, { agents: listAgents() });
   if (parts[1] === 'lab') return labApi(req, res, parts, url); // laboratorio (spec/08), cuerpos hasta 48 MB
+  // en la demo pública nadie puede abrir ni borrar mundos: vaciaría el laboratorio a todos
+  if (parts[1] === 'worlds' && PUBLIC_DEMO && method !== 'GET') {
+    return json(res, 403, { error: 'En la demo los mundos no se pueden cambiar.' });
+  }
   if (parts[1] === 'worlds') { // mundos (spec/09)
     const b = method === 'GET' ? {} : await readBody(req);
     if (b === CUT) return; // nadie espera la respuesta
@@ -91,6 +116,7 @@ async function api(req, res, parts, url) {
   if (!parts[2]) {
     if (method === 'GET') return json(res, 200, { rooms: roomList() });
     if (method === 'POST') {
+      if (PUBLIC_DEMO && rooms.size >= DEMO_MAX_ROOMS) return json(res, 429, { error: 'La demo tiene demasiadas salas abiertas. Prueba en un momento.' });
       const b = await readBody(req);
       if (b === CUT) return; // nadie espera la respuesta
       if (b === OVER) return tooBig(res);
@@ -127,6 +153,11 @@ async function api(req, res, parts, url) {
   if (body === CUT) return; // nadie espera la respuesta
   if (body === OVER) return tooBig(res);
   const pid = body.playerId;
+  const token = body.token || req.headers['x-player-token'];
+  if (['fire', 'move', 'chat'].includes(sub) || (sub === 'start' && pid)) {
+    const denied = checkPlayer(room, pid, token);
+    if (denied) return json(res, denied.status, { error: denied.error });
+  }
 
   switch (sub) {
     case 'join': {
@@ -172,7 +203,13 @@ const server = http.createServer(async (req, res) => {
   res.end(readFileSync(path));
 });
 
-server.listen(PORT, () => {
+// Demo pública: límites para un servidor gratuito (ver también DEMO_LIMITS en evo/api.js).
+const PUBLIC_DEMO = process.env.PUBLIC_DEMO === 'true';
+const DEMO_MAX_ROOMS = 20;
+
+// Solo escucha en este equipo salvo que se pida otra cosa (HOST=0.0.0.0 en un servidor).
+const HOST = process.env.HOST || '127.0.0.1';
+server.listen(PORT, HOST, () => {
   console.log(`⚔️  Graphwar Agents en http://localhost:${PORT}`);
   console.log(`    API de agentes: ${C.MODES.FUNCTION ? 'POST /api/rooms/:code/fire' : ''}`);
 });

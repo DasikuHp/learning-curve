@@ -97,6 +97,8 @@ try {
   results.push(await run('arreglos: voz, casos extra (huecos de mutantes de A3)', [join(ROOT, 'test', 'arreglos-voz-extra.spec.mjs')]));
   results.push(await run('arreglos (revisión): red ocupada y huecos de mutantes, casos extra b', [join(ROOT, 'test', 'arreglos-ocupada-extra-b.spec.mjs'), BASE]));
   results.push(await run('parte 3: sala y servidor (M7, R5, M10, B2, B4)', [join(ROOT, 'test', 'arreglos-sala.spec.mjs'), BASE]));
+  results.push(await run('seguridad: token del jugador y CORS', [join(ROOT, 'test', 'seguridad.spec.mjs'), BASE]));
+  results.push(await run('demo pública: límites y redes de ejemplo', [join(ROOT, 'test', 'demo.spec.mjs')]));
   results.push(await run('parte 3: verdad y registro (M1, M3, M4, M5, M6, M8)', [join(ROOT, 'test', 'arreglos-verdad.spec.mjs'), BASE]));
   results.push(await run('parte 3: almacenamiento (M2, M9, M15, B3)', [join(ROOT, 'test', 'arreglos-almacen.spec.mjs'), BASE]));
   results.push(await run('parte 3: liga y validación (M11, M13, B1)', [join(ROOT, 'test', 'arreglos-liga.spec.mjs'), BASE]));

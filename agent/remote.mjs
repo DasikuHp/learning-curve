@@ -89,11 +89,11 @@ async function main() {
       }
       if (decision.say && !talked.has(decision.say)) {
         talked.add(decision.say);
-        try { await api(`/api/rooms/${ROOM}/chat`, 'POST', { playerId: me.id, text: decision.say }); } catch {}
+        try { await api(`/api/rooms/${ROOM}/chat`, 'POST', { playerId: me.id, token: j.token, text: decision.say }); } catch {}
         await sleep(900); // que el rival lo lea antes del cañonazo
       }
       console.log(`🎯 [${decision.mode}] ${decision.expr}${decision.angle ? ` ángulo ${decision.angle}°` : ''}${decision.say ? ` 💬 "${decision.say}"` : ''}`);
-      const r = await api(`/api/rooms/${ROOM}/fire`, 'POST', { playerId: me.id, mode: decision.mode, expr: decision.expr, angle: decision.angle || 0 });
+      const r = await api(`/api/rooms/${ROOM}/fire`, 'POST', { playerId: me.id, token: j.token, mode: decision.mode, expr: decision.expr, angle: decision.angle || 0 });
       console.log('   →', JSON.stringify(r.result || r.error));
       await sleep(2500);
     } else await sleep(1000);

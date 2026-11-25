@@ -405,20 +405,20 @@ if (BASE) {
     assert.equal(room.seed, 1);
     const j = await api(`/api/rooms/${room.code}/join`, 'POST', { name: 'yo', team: 'left' });
     await api(`/api/rooms/${room.code}/addagent`, 'POST', { type: 'chaos', level: 1, team: 'right' });
-    await api(`/api/rooms/${room.code}/start`, 'POST', { playerId: j.player.id });
+    await api(`/api/rooms/${room.code}/start`, 'POST', { playerId: j.player.id, token: j.token });
     let st = null;
     const t0 = Date.now();
     while (Date.now() - t0 < 15000) { st = await api(`/api/rooms/${room.code}/state`); if (st.phase !== 'playing' || (st.turn && st.turn.playerId === j.player.id && st.turn.stage === 'shoot')) break; await sleep(100); }
     assert.ok(st.turn && st.turn.playerId === j.player.id, 'mi turno');
     assert.equal(st.config.seed, 1); assert.equal(st.config.moveRadius, 2);
-    const bad = await api(`/api/rooms/${room.code}/move`, 'POST', { playerId: j.player.id, x: 0, y: 0 });
+    const bad = await api(`/api/rooms/${room.code}/move`, 'POST', { playerId: j.player.id, token: j.token, x: 0, y: 0 });
     assert.ok(bad.error, 'antes de disparar no se puede mover');
-    const f = await api(`/api/rooms/${room.code}/fire`, 'POST', { playerId: j.player.id, mode: 'function', expr: '0.2*x' });
+    const f = await api(`/api/rooms/${room.code}/fire`, 'POST', { playerId: j.player.id, token: j.token, mode: 'function', expr: '0.2*x' });
     assert.ok(f.ok, f.error);
     st = await api(`/api/rooms/${room.code}/state`);
     assert.equal(st.turn.stage, 'move'); assert.equal(st.turn.radius, 2); assert.ok(st.turn.deadline > Date.now());
     const soldier = st.soldiers.find((s) => s.ownerId === j.player.id);
-    const mv = await api(`/api/rooms/${room.code}/move`, 'POST', { playerId: j.player.id, x: soldier.x - 1, y: soldier.y });
+    const mv = await api(`/api/rooms/${room.code}/move`, 'POST', { playerId: j.player.id, token: j.token, x: soldier.x - 1, y: soldier.y });
     assert.ok(mv.ok && mv.move && mv.move.soldierId === soldier.id, JSON.stringify(mv));
     st = await api(`/api/rooms/${room.code}/state`);
     assert.ok(st.lastMove && st.lastMove.soldierId === soldier.id && near(st.lastMove.to.x, mv.move.to.x));
@@ -426,7 +426,7 @@ if (BASE) {
     const t1 = Date.now();
     while (Date.now() - t1 < 15000) { st = await api(`/api/rooms/${room.code}/state`); if (st.phase !== 'playing' || (st.turn && st.turn.playerId === j.player.id && st.turn.stage === 'shoot')) break; await sleep(100); }
     if (st.phase === 'playing') {
-      const f2 = await api(`/api/rooms/${room.code}/fire`, 'POST', { playerId: j.player.id, mode: 'function', expr: '-0.2*x', move: 'stay' });
+      const f2 = await api(`/api/rooms/${room.code}/fire`, 'POST', { playerId: j.player.id, token: j.token, mode: 'function', expr: '-0.2*x', move: 'stay' });
       assert.ok(f2.ok && f2.move && f2.move.stayed === true, JSON.stringify(f2));
       st = await api(`/api/rooms/${room.code}/state`);
       assert.ok(!st.turn || st.turn.stage !== 'move', 'con move en el cuerpo no hay ventana');

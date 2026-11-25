@@ -25,7 +25,7 @@ async function main() {
   await api(`/api/rooms/${code}/addbot`, 'POST', { level: 3 });
   const st0 = await api(`/api/rooms/${code}/state`);
   if (st0.players.filter((p) => !p.isBot).length !== 1 || !st0.players.some((p) => p.isBot)) throw new Error('jugadores incorrectos');
-  await api(`/api/rooms/${code}/start`, 'POST', { playerId: me.player.id });
+  await api(`/api/rooms/${code}/start`, 'POST', { playerId: me.player.id, token: me.token });
   console.log('✓ partida iniciada (ClineAgent vs CPU nivel 3)');
 
   let kills = 0, suicide = 0, shots = 0, lastTs = 0;
@@ -45,10 +45,10 @@ async function main() {
       return;
     }
     if (st.turn && st.turn.playerId === myId && st.turn.stage === 'move') {
-      await api(`/api/rooms/${code}/move`, 'POST', { playerId: myId, stay: true }); // F1: tras disparar, elegir destino
+      await api(`/api/rooms/${code}/move`, 'POST', { playerId: myId, token: me.token, stay: true }); // F1: tras disparar, elegir destino
     } else if (st.turn && st.turn.playerId === myId) {
       const cand = searchShot(st, st.turn.soldierId, 30);
-      const r = await api(`/api/rooms/${code}/fire`, 'POST', { playerId: myId, ...cand });
+      const r = await api(`/api/rooms/${code}/fire`, 'POST', { playerId: myId, token: me.token, ...cand });
       if (r.error) console.log('  (fire error:', r.error, ')');
     }
     await sleep(500);

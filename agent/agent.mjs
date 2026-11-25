@@ -83,14 +83,14 @@ async function main() {
     }
     case 'fire': {
       const s = loadSession();
-      const body = { playerId: s.playerId, mode: opt('mode', 'function'), expr: opt('expr', 'x'), angle: Number(opt('angle', '0')) };
+      const body = { playerId: s.playerId, token: s.token, mode: opt('mode', 'function'), expr: opt('expr', 'x'), angle: Number(opt('angle', '0')) };
       const r = await api(`/api/rooms/${s.code}/fire`, 'POST', body);
       console.log(JSON.stringify(r));
       break;
     }
     case 'chat': {
       const s = loadSession();
-      console.log(JSON.stringify(await api(`/api/rooms/${s.code}/chat`, 'POST', { playerId: s.playerId, text: opt('text', '') })));
+      console.log(JSON.stringify(await api(`/api/rooms/${s.code}/chat`, 'POST', { playerId: s.playerId, token: s.token, text: opt('text', '') })));
       break;
     }
     case 'autopilot': {
@@ -104,11 +104,11 @@ async function main() {
           return;
         }
         if (st.turn && st.turn.playerId === s.playerId && st.turn.stage === 'move') {
-          await api(`/api/rooms/${s.code}/move`, 'POST', { playerId: s.playerId, stay: true }); // F1: tras disparar, destino
+          await api(`/api/rooms/${s.code}/move`, 'POST', { playerId: s.playerId, token: s.token, stay: true }); // F1: tras disparar, destino
         } else if (st.turn && st.turn.playerId === s.playerId) {
           const cand = searchShot(st, st.turn.soldierId, tries);
           console.log(`🎯 Disparo: [${cand.mode}] ${cand.expr}${cand.angle != null ? ` (ángulo ${Number(cand.angle).toFixed(0)}°)` : ''}`);
-          const r = await api(`/api/rooms/${s.code}/fire`, 'POST', { playerId: s.playerId, ...cand });
+          const r = await api(`/api/rooms/${s.code}/fire`, 'POST', { playerId: s.playerId, token: s.token, ...cand });
           console.log('   →', JSON.stringify(r.result || r.error));
           await sleep(4000);
         } else await sleep(1200);
