@@ -157,6 +157,8 @@ ul { list-style: none; }
 .ctl { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 2px 14px; padding: 8px 0; border-bottom: 1px solid #172238; }
 .ctl > label { font-weight: 600; font-size: 13px; padding-top: 4px; }
 .ctl-in { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+/* un desplegable no puede ser más ancho que su columna (con nombres largos se salía de la tarjeta) */
+.ctl-in select { max-width: 100%; min-width: 0; }
 .ctl-in input[type="range"] { flex: 1; min-width: 120px; }
 .ctl .explain { grid-column: 2; }
 .numin { width: 96px; }
