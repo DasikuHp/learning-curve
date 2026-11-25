@@ -116,7 +116,9 @@ p. ej. `survive` alto → "cobarde: se esconde tras los muros y dispara poco".
   "soldiers": "random",                   // | 1..4
   "seed": 12345 }
 ```
-- Mezcla de rivales 🧭 60/25/15 (✅ deslizadores): `antagonist` = `antagonistId` o la reina; sala de la
+- Mezcla de rivales 🧭 60/25/15 (✅ deslizadores): `antagonist` = `antagonistId` o la reina (sin reina ni
+  `antagonistId`, `POST /trainings` pone de `antagonistId` la rival de práctica del mundo, `practice[0]` de su
+  `meta.json`, si existe y no es la propia red: así un mundo nuevo no entrena solo contra sí misma); sala de la
   fama = ex-reinas + hitos propios muestreados con `f_hard = (1 − tasa de victoria contra él)^hard`
   (AlphaStar); `self` = copia congelada del inicio del lote; `ghost`: probabilidad de que la
   partida sea contra una ex-reina a la que se ha perdido en las últimas 20 (evento `ghost`).

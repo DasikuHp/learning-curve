@@ -67,6 +67,7 @@
   "test/receta-extra.spec.mjs": "8536308cb90383c2279453a40946729f806609ec4a134353ccff2219b35a3825",
   "test/receta.spec.mjs": "c41b5c812ea3fec4b857c78464d56a0b4a3ee6aee2006a0b7405ae7182c370f9",
   "test/red.spec.mjs": "6c9a0c0d7e9a65f10aeb2b4f4aabc0e5c4b68f9c7960f27ba8886f6f62669220",
+  "test/rival-practica.spec.mjs": "26793f7574b3834c864885346d7fe97195f213591a3bb6ebc7e2a16f239b95b6",
   "test/rng.spec.mjs": "4fc0264c161a540151bacbc2a4a11c8e5f6dafead07bae50eb6d6105fda0bc74",
   "test/rooms.spec.mjs": "33e70b439390b89fc32dcd6acb9c1998682c2af5ec786615ae74302a3629c719",
   "test/seguridad.spec.mjs": "49b5005f0d3139b6a8827391d7de1c4392b052d5f3ccc542dfed19583c77599b",

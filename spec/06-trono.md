@@ -156,7 +156,9 @@
   `f_hard = (1 − winrate(netId, rival))^hard` (0.5 sin datos), `hard = 2` por defecto.
 - El entrenador (spec/04 §6) usa `pickOpponent` con `throne.json` y sus hitos como `hall`; `exploiter: true`
   en `POST /trainings` fija `opponents = {antagonist: 1, hallOfFame: 0, self: 0, antagonistId: reina}` y
-  queda en `config.exploiter` (400 si no hay reina).
+  queda en `config.exploiter` (400 si no hay reina). Sin reina ni `antagonistId` (y sin `exploiter`), `POST /trainings`
+  fija `antagonistId` = la rival de práctica del mundo activo (`practice[0]` de su `meta.json`) si existe y no es
+  `netId`; `pickOpponent` no cambia.
 
 ### 6.4 Dinastías (§3) y trabajos
 - `POST /api/lab/dynasties {A:{name, netId}, B:{name, netId}}` (o `?house=A` con solo esa casa) →
