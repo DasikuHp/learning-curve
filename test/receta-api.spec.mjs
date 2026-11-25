@@ -34,7 +34,9 @@ const listen = () => {
 };
 
 try {
-  const net = (await api('/api/lab/nets', 'POST', { template: 'sniper', name: 'Receta' })).body.id;
+  // el Francotirador con la lr de siempre (0,003): la plantilla ahora trae 0,03 y esta prueba comprueba que la red conserva su lr
+  const sn = (await api('/api/lab/templates')).body.find((t) => t.key === 'sniper').genome;
+  const net = (await api('/api/lab/nets', 'POST', { genome: { ...sn, id: 'receta', name: 'Receta', learning: { ...sn.learning, gradient: { ...sn.learning.gradient, lr: 0.003 } } } })).body.id;
   const body = (extra) => ({ netId: net, speed: 'turbo', workers: 1, duration: { games: 4 }, soldiers: 1, seed: 7, opponents: { antagonist: 0, hallOfFame: 0, self: 1 }, ...extra });
 
   await check('400 con motivo y ejemplo para cada parte de la receta, y no se crea ningún entreno', async () => {

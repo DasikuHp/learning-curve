@@ -98,7 +98,9 @@ check('arreglar con un clic: cable repetido, cable a un ojo y Elegir sin candida
   const f2 = H.fixes(intoEye, CAT);
   assert.ok(f2.some((x) => /los ojos no reciben/.test(x.label)));
   // Elegir alimentado solo por Rasgos (contexto): la solución única es unirle Candidatos
-  const only = { ...tpl('empty'), wires: [{ from: 'f', to: 'ch' }] };
+  // la Vacía sin Mira: con Candidatos y Mira habría dos formas de arreglarlo (ver la prueba siguiente)
+  const vacia = tpl('empty');
+  const only = { ...vacia, blocks: vacia.blocks.filter((b) => b.type !== 'eye.aim'), wires: [{ from: 'f', to: 'ch' }] };
   const f3 = H.fixes(only, CAT);
   const fx = f3.find((x) => x.key === 'feed:ch');
   assert.ok(fx, JSON.stringify(f3.map((x) => x.key)));

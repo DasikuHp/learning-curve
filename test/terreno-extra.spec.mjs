@@ -26,7 +26,18 @@ const { decideShot, decideMove } = await import('../shared/policy.js');
 const { compile } = await import('../shared/nn.js');
 const { makeRng } = await import('../shared/rng.js');
 const { TEMPLATES } = await import('../shared/templates.js');
-const { normalize } = await import('../shared/genome.js');
+const { normalize, newGenome } = await import('../shared/genome.js');
+
+// la Tortuga de antes de Mira (mismos bloques, cables y semilla): la prueba del ajuste fino depende de sus pesos
+const tortugaSinMira = () => {
+  const B = (id, type, params = {}) => ({ id, type, params }), W = (from, to) => ({ from, to });
+  return newGenome({ id: 'plantilla-tortuga', name: 'Tortuga con memoria', blocks: [
+    B('f', 'eye.features'), B('r', 'eye.radar', { rays: 16 }), B('k', 'eye.clock'), B('cat', 'concat'), B('g', 'gru', { units: 16 }),
+    B('d', 'dense', { units: 24, activation: 'tanh' }), B('c', 'eye.candidates'), B('cd', 'dense', { units: 16, activation: 'tanh' }), B('ch', 'hand.choose'),
+    B('m', 'eye.moves'), B('md', 'dense', { units: 16, activation: 'tanh' }), B('fm', 'foot.move', { adjust: true }),
+  ], wires: [W('f', 'cat'), W('r', 'cat'), W('k', 'cat'), W('cat', 'g'), W('g', 'd'), W('d', 'cd'), W('c', 'cd'), W('cd', 'ch'), W('m', 'md'), W('g', 'md'), W('md', 'fm')],
+  reward: { survive: 0.5, cover: 0.3 } }, makeRng(102));
+};
 
 const circle = (x, y, r) => ({ kind: 'circle', x, y, r });
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -66,7 +77,7 @@ await check('sala: "enemigos que te ven" (move.coverBefore/After) mira los bocad
 
 // ---------- red: ajuste fino del movimiento ----------
 await check('red: el ajuste fino del movimiento se juzga con los bocados (lo mismo que haría la sala) y se pide tal cual', () => {
-  const g = normalize(clone(TEMPLATES.turtle.genome)); // Moverse con ajuste
+  const g = normalize(tortugaSinMira()); // Moverse con ajuste
   const net = compile(g);
   // la red está dentro de un círculo grande, en una galería que han abierto los bocados
   const bites = [0, 0.5, 1, 1.5, 2, 2.5].map((x) => ({ x, y: 0, r: C.BITE_RADIUS }));
