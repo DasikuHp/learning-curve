@@ -20,13 +20,13 @@ export const TEMPLATES = {
   },
   turtle: {
     name: '🐢 Tortuga con memoria',
-    why: 'Recuerda de dónde le dispararon (GRU sobre Rasgos, Radar y Reloj) y premia sobrevivir y cubrirse: se esconde tras los muros.',
+    why: 'Recuerda de dónde le dispararon (GRU sobre Rasgos, Radar y Reloj) y premia sobrevivir y cubrirse: se esconde tras los muros. Apunta con Candidatos y Mira (Mira llega también directa a Elegir).',
     genome: make('plantilla-tortuga', 'Tortuga con memoria', [
       B('f', 'eye.features'), B('r', 'eye.radar', { rays: 16 }), B('k', 'eye.clock'), B('cat', 'concat'), B('g', 'gru', { units: 16 }),
-      B('d', 'dense', { units: 24, activation: 'tanh' }), B('c', 'eye.candidates'), B('cd', 'dense', { units: 16, activation: 'tanh' }), B('ch', 'hand.choose'),
+      B('d', 'dense', { units: 24, activation: 'tanh' }), B('c', 'eye.candidates'), B('mi', 'eye.aim'), B('cd', 'dense', { units: 16, activation: 'tanh' }), B('ch', 'hand.choose'),
       B('m', 'eye.moves'), B('md', 'dense', { units: 16, activation: 'tanh' }), B('fm', 'foot.move', { adjust: true }),
-    ], [W('f', 'cat'), W('r', 'cat'), W('k', 'cat'), W('cat', 'g'), W('g', 'd'), W('d', 'cd'), W('c', 'cd'), W('cd', 'ch'), W('m', 'md'), W('g', 'md'), W('md', 'fm')],
-    { reward: { survive: 0.5, cover: 0.3 } }, 102),
+    ], [W('f', 'cat'), W('r', 'cat'), W('k', 'cat'), W('cat', 'g'), W('g', 'd'), W('d', 'cd'), W('c', 'cd'), W('mi', 'cd'), W('cd', 'ch'), W('mi', 'ch'), W('m', 'md'), W('g', 'md'), W('md', 'fm')],
+    { reward: { survive: 0.5, cover: 0.3 }, learning: { gradient: { lr: 0.03 } } }, 102),
   },
   seer: {
     name: '🔮 Vidente',
@@ -40,7 +40,8 @@ export const TEMPLATES = {
   },
   empty: {
     name: '⬜ Vacía',
-    why: 'Lo mínimo que puede disparar: Rasgos y Candidatos directos a Elegir, sin Instinto ni Pies. Construye tú el resto.',
-    genome: make('plantilla-vacia', 'Vacía', [B('f', 'eye.features'), B('c', 'eye.candidates'), B('ch', 'hand.choose')], [W('f', 'ch'), W('c', 'ch')], {}, 104),
+    why: 'Lo mínimo que puede disparar: Rasgos, Candidatos y Mira directos a Elegir, sin Instinto ni Pies. Construye tú el resto.',
+    genome: make('plantilla-vacia', 'Vacía', [B('f', 'eye.features'), B('c', 'eye.candidates'), B('mi', 'eye.aim'), B('ch', 'hand.choose')], [W('f', 'ch'), W('c', 'ch'), W('mi', 'ch')],
+      { learning: { gradient: { lr: 0.03 } } }, 104),
   },
 };
