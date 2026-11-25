@@ -35,12 +35,12 @@ Cada partida guardada es un mundo con sus redes, su trono y su historia, y empie
 | 1. Crear | 2. Entrenar |
 | :---: | :---: |
 | <img src="docs/media/crear.png" width="420"> | <img src="docs/media/entrenar.png" width="420"> |
-| El editor de redes: bloques a la izquierda, el grafo en el centro y un banco de pruebas que enseña qué tiro escoge la red y por qué. | Entrenos con su curva de recompensa y de victorias en directo. Después de cada lote la red "sueña" y aprende, y la interfaz dice qué bloque cambió más. |
+| El editor de redes: bloques a la izquierda, el grafo en el centro y un banco de pruebas que enseña qué tiro escoge la red y por qué. | Una Vidente nueva entrenando 300 partidas contra `chaos`: sus victorias pasan de casi ninguna a un 65 %. Después de cada lote la red "sueña" y aprende, y la interfaz dice qué bloque cambió más. |
 
 | 3. Duelo | 4. Trono |
 | :---: | :---: |
 | <img src="docs/media/duelo.png" width="420"> | <img src="docs/media/trono.png" width="420"> |
-| Dos redes juegan en directo. A la derecha, los candidatos que barajó la red, la probabilidad de cada uno y el registro de la partida. | La reina y sus retadoras, los duelos mapa a mapa, las dinastías y el árbol genealógico de cada red. |
+| Dos redes juegan en directo. A la derecha, los candidatos que barajó la red, la probabilidad de cada uno y el registro de la partida. | Esa Vidente, ya entrenada, le quita el trono a Vidente 1, que pasa a la sala de la fama. También están los duelos mapa a mapa, las dinastías y el árbol genealógico. |
 
 <!-- VIDEO_DUELO: enlace de user-attachments de _work/video-lc/duelo.mp4 y debajo:
 <sub>Un duelo en directo entre Vidente 1 y una red recién creada.</sub>
@@ -58,25 +58,39 @@ La vista se puede cambiar en cualquier momento, y el tutorial (8 capítulos cort
 
 ## ¿Aprende de verdad?
 
-Depende del rival. Entrené redes nuevas, sin ningún entreno previo, durante 300 partidas con la receta por defecto pero siempre contra el mismo bot, y medí cuántos enemigos eliminaban por partida:
+Sí, aunque al principio no. La primera versión de la Vidente apenas aprendía, y buscar el motivo es lo que más me enseñó del proyecto.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/media/curva-aprendizaje-oscuro.svg">
-  <img src="docs/media/curva-aprendizaje-claro.svg" alt="Bajas por partida durante 300 partidas de entreno: la Vidente contra chaos pasa de unas 0,2 a unas 0,7; los dos Francotiradores suben menos y con mucho ruido" width="760">
+  <img src="docs/media/curva-aprendizaje-claro.svg" alt="Victorias durante 300 partidas de entreno contra chaos: la Vidente actual pasa de ganar un 17 % de las partidas a un 64 %; la versión anterior, con el bloque Ajustar, se queda entre el 5 y el 20 %" width="760">
 </picture>
 
-| Partidas | Vidente contra «chaos» | Francotirador contra «chaos» | Francotirador contra «greedy» |
-| :--- | :---: | :---: | :---: |
-| 1–50 | 0,24 bajas (6 % de victorias) | 0,40 (2 %) | 0,22 (4 %) |
-| 51–100 | 0,48 (12 %) | 0,40 (8 %) | 0,28 (2 %) |
-| 101–150 | 0,58 (12 %) | 0,42 (12 %) | 0,40 (2 %) |
-| 151–200 | 0,54 (10 %) | 0,42 (12 %) | 0,40 (8 %) |
-| 201–250 | 0,60 (10 %) | 0,52 (8 %) | 0,54 (6 %) |
-| 251–300 | 0,78 (20 %) | 0,56 (12 %) | 0,46 (10 %) |
+| Partidas | Vidente ahora (media de 3 entrenos) | Vidente con Ajustar (versión anterior) |
+| :--- | :---: | :---: |
+| 1–50 | 17 % de victorias (0,65 bajas) | 6 % (0,24 bajas) |
+| 51–100 | 40 % (1,30 bajas) | 12 % (0,48 bajas) |
+| 101–150 | 55 % (1,46 bajas) | 12 % (0,58 bajas) |
+| 151–200 | 65 % (1,93 bajas) | 10 % (0,54 bajas) |
+| 201–250 | 65 % (1,91 bajas) | 10 % (0,60 bajas) |
+| 251–300 | 64 % (1,82 bajas) | 20 % (0,78 bajas) |
 
-`chaos` es un bot que dispara casi al azar y `greedy` uno que busca el mejor tiro posible. La Vidente, que tiene el bloque Simulador (sabe qué pasaría con cada tiro antes de dispararlo), triplica sus bajas en 300 partidas. El Francotirador, que solo ve la geometría, mejora más despacio. Contra `greedy` la señal es débil: la red pierde casi siempre y le cuesta saber qué hizo bien. Con 100 partidas más, el Francotirador contra `greedy` volvió a bajar a 0,26 bajas por partida, así que la curva tiene mucho ruido.
+Cada entreno empieza con una Vidente nueva, sin ningún entreno previo, que juega 300 partidas contra el bot `chaos` en el servidor en modo demo (un solo hilo, como la demo pública). `chaos` no dispara a ciegas: inventa 70 funciones raras, las simula y dispara una de las 6 mejores.
 
-En el examen fijo del boletín (40 escenas de un solo disparo, siempre las mismas), el Francotirador entrenado contra `chaos` pasó de acertar el 10 % de los tiros al 17,5 %, y su supervivencia contra el bot Sniper subió del 5 % al 25 %. Es una mejora real pero modesta: para jugar bien hacen falta miles de partidas, no cientos.
+### Qué fallaba
+
+La Vidente tiene el bloque Simulador: antes de disparar sabe, para cada uno de sus 24 tiros candidatos, si mataría a alguien. Con esa información aprender debería ser fácil. Para comprobarlo programé un oráculo que escoge siempre el candidato que más mata según el Simulador, y contra `chaos` gana el 78 % de las partidas. La Vidente, en cambio, escogía el tiro que mata en un 2-4 % de los disparos, lo mismo que eligiendo al azar, y seguía igual después de 300 partidas.
+
+El problema era el bloque Ajustar. Después de escoger un candidato, Ajustar le da un pequeño empujón a sus parámetros, pero el Simulador había visto el tiro sin empujar. En una Vidente entrenada, 28 de unos 36 tiros que la simulación daba por buenos fallaron después del empujón. Si la red escoge bien y aun así falla, no recibe la recompensa y no tiene de qué aprender. Lo comprobé dejando Ajustar congelado, sin aprender: la red siguió sin aprender. Sin Ajustar, aprendió con todas las semillas que probé.
+
+Ahora la plantilla Vidente no lleva Ajustar y aprende con una tasa de 0,01 en vez de 0,003. También cambié el rival por defecto: si el mundo todavía no tiene reina, el entreno juega contra Vidente 1, la rival de práctica que trae cada mundo. Antes jugaba solo contra copias de sí misma, y así la tasa de victorias no podía subir aunque la red mejorara.
+
+### Cómo se comprueba
+
+`test/aprende.spec.mjs` entrena una Vidente 150 partidas contra `chaos` y después examina la red congelada en 40 partidas fijas, igual que a una Vidente sin entrenar. Sin entrenar escoge el tiro que mata el 14 % de las veces que tiene uno y gana el 13 % de las partidas. Entrenada, el 75 % y el 45 %. La prueba es determinista: el mismo entreno da siempre la misma red.
+
+En el boletín del juego (40 escenas fijas de un solo disparo) las tres Videntes pasaron de acertar el 15 % de los tiros al 50 %, y su supervivencia contra el bot Sniper subió del 0 % al 35-40 %.
+
+Lo que no está resuelto: el Francotirador, que no tiene Simulador y solo ve la geometría, mejora mucho más despacio (de 0,40 a 0,56 bajas por partida en 300 partidas contra `chaos`), y contra `greedy`, que busca el mejor tiro posible, la señal es débil y con mucho ruido.
 
 Los datos salen de los registros de cada entreno (`curve` en `records/trainings/<id>.json`).
 
