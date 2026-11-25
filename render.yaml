@@ -1,5 +1,5 @@
-# Demo pública en Render (plan gratuito). El disco se borra en cada reinicio: el servidor
-# arranca con las redes de ejemplo de demo/seed y los límites de PUBLIC_DEMO.
+# Demo pública en Render (plan gratuito). El disco se borra en cada reinicio, así que la demo
+# vuelve sola a su estado inicial. PUBLIC_DEMO pone los límites de evo/api.js y server/server.js.
 services:
   - type: web
     name: learning-curve

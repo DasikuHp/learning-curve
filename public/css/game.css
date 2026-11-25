@@ -60,7 +60,7 @@ body.game .panel, body.game section.card { box-shadow: var(--glow-c); }
 .portada > .pfx { pointer-events: none; }
 .portada > .pfx canvas { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; }
 body.fx-on .p-title, body.fx-on .p-sub, body.fx-on .p-menu button { animation: none; }
-.p-title { font-size: clamp(44px, 6.4vw, 92px); font-weight: 200; letter-spacing: .28em; line-height: 1; text-shadow: 0 0 34px #3fd0ff55; animation: p-in 1.2s ease-out both; }
+.p-title { font-size: clamp(38px, 5vw, 76px); font-weight: 200; letter-spacing: .2em; line-height: 1; text-shadow: 0 0 34px #3fd0ff55; animation: p-in 1.2s ease-out both; }
 .p-title span { color: var(--cyan); }
 .p-sub { color: var(--dim); letter-spacing: .34em; text-transform: uppercase; font-size: 13px; margin: 14px 0 34px; animation: p-in 1.2s .2s ease-out both; }
 .p-menu { display: grid; gap: 10px; max-width: 380px; }

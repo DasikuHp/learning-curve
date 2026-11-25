@@ -33,7 +33,7 @@
   "test/auditoria-p0-api.spec.mjs": "3b10af4be32314fc1ddb73990d39102d8b66113e90075182a8435e69a5a021fe",
   "test/auditoria-p0.spec.mjs": "cb0816d0e5a5da49b56fa6c84fcc779e46c471b1f43b17ca4c8fab69ba0e5239",
   "test/cuerpos.spec.mjs": "d3fd814785d561fbc2a9c409c4e1e9098a2d80aa1476ea6bfe5b6f7fe99aa76f",
-  "test/demo.spec.mjs": "ddbf3d7aab3b222cdc84cb78a231b02b86be83712bed3781066413aa8572db46",
+  "test/demo.spec.mjs": "5f77b93d64c14e1ce2cdf70932dbf6a5e879d6bdf33bf0e6df5b506314c293ad",
   "test/duelo-mix.spec.mjs": "10438f06d93e8994065e68be7721df8e3249faf3dfe71e470fb3f6ec00bf826e",
   "test/entrenador-extra-b.spec.mjs": "54834cedf0241a56b4c5fae98500ff3e7e70a882c0dc7d9690c26619cfcb576c",
   "test/entrenador-extra.spec.mjs": "6b4446d6acb26f7f1968d4e51505a4e090b1ec3574789cef55786d32b68f7db7",

@@ -27,37 +27,27 @@ import { makeRng, randomSeed } from '../shared/rng.js';
 // ---------- entrenos y SSE global (spec/04 §9.6) ----------
 const trainings = new Map();
 
-// Demo pública (PUBLIC_DEMO=true): cualquiera puede probar el laboratorio, pero con límites para
-// que un servidor gratuito no se sature, y sin poder cambiar las redes de ejemplo (las que había
-// al arrancar). Quien quiera experimentar con una, cría una hija y trabaja sobre ella.
+// Demo pública (PUBLIC_DEMO=true): todo funciona como en local, con límites para que un
+// servidor gratuito no se sature. Cada mundo trae su propia copia de la red base, así que lo
+// que haga un visitante en su mundo no cambia los demás.
 const DEMO = process.env.PUBLIC_DEMO === 'true';
 export const DEMO_LIMITS = { jobs: 2, nets: 40, games: 300, minutes: 5 };
-let demoSeedNets = null;
 const runningJobs = () => [...trainings.values()].filter((t) => t.status === 'running').length
   + [...duels.values()].filter((d) => d.rec.status === 'running').length
   + [...jobs.values()].filter((j) => j.status === 'running').length;
-const NET_EDITS = new Set(['weights', 'neurons', 'frozen', 'transplant', 'slap', 'caress', 'versions']);
-const HEAVY = new Set(['trainings', 'duels', 'dynasties', 'throne', 'evolution', 'league']);
+const HEAVY = new Set(['trainings', 'duels', 'dynasties', 'throne']);
 
 function demoGuard(method, seg) {
   if (!DEMO || method === 'GET') return null;
-  demoSeedNets ??= new Set(listNets().map((n) => n.id));
-  const id = seg[0] === 'nets' ? seg[1] : null;
-  if (id && demoSeedNets.has(id) && (method === 'DELETE' || method === 'PUT' || NET_EDITS.has(seg[2]))) {
-    return [403, 'En la demo las redes de ejemplo no se pueden cambiar: cría una hija y experimenta con ella.'];
-  }
   if (seg[0] === 'nets' && (seg.length === 1 || seg[1] === 'import' || seg[2] === 'children')
       && listNets().length >= DEMO_LIMITS.nets) {
-    return [429, `La demo ya tiene ${DEMO_LIMITS.nets} redes; borra alguna de las tuyas antes de crear otra.`];
+    return [429, `La demo ya tiene ${DEMO_LIMITS.nets} redes en este mundo; borra alguna antes de crear otra.`];
   }
   if ((HEAVY.has(seg[0]) || seg[2] === 'children') && runningJobs() >= DEMO_LIMITS.jobs) {
     return [429, 'La demo está ocupada con otros entrenamientos o duelos. Prueba otra vez en un momento.'];
   }
   return null;
 }
-// Se llama al arrancar el servidor: las redes que hay en ese momento son las de ejemplo.
-export function initDemoSeeds() { if (DEMO) demoSeedNets = new Set(listNets().map((n) => n.id)); }
-const isDemoSeed = (netId) => DEMO && !!demoSeedNets && demoSeedNets.has(netId);
 // trabajos (spec/08 §5): hijos + pre-torneo; más adelante exámenes y generaciones
 const jobs = new Map();
 let jobSeq = null; // se inicia detrás de los trabajos guardados: tras reiniciar no se repiten (M9)
@@ -661,7 +651,6 @@ export async function labApi(req, res, parts, url) {
       if ((d.games !== undefined && !(Number.isInteger(d.games) && d.games >= 1)) || (d.minutes !== undefined && !(d.minutes > 0)) || (d.plateau !== undefined && !(d.plateau && Number.isInteger(d.plateau.window) && d.plateau.window >= 1))) return bad(400, 'duración inválida: {games ≥ 1} | {minutes > 0} | {plateau:{window ≥ 1, minGain}}');
       if (v.workers !== undefined && !(Number.isInteger(v.workers) && v.workers >= 1 && v.workers <= 32)) return bad(400, 'workers entre 1 y 32');
       if (DEMO) {
-        if (isDemoSeed(v.netId)) return bad(403, 'En la demo las redes de ejemplo no se entrenan: cría una hija y entrénala a ella.');
         if (d.plateau || (d.games ?? 0) > DEMO_LIMITS.games || (d.minutes ?? 0) > DEMO_LIMITS.minutes) {
           return bad(400, `En la demo un entreno dura como mucho ${DEMO_LIMITS.games} partidas o ${DEMO_LIMITS.minutes} minutos.`);
         }

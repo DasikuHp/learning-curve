@@ -1,12 +1,12 @@
 // Servidor HTTP: estáticos + API REST + SSE para clientes y agentes IA.
 // Sin dependencias externas: Node >= 18.
 import http from 'node:http';
-import { readFileSync, existsSync, cpSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { extname, join, normalize, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rooms, getRoom, createRoom } from './rooms.js';
 import { listAgents } from '../agents/registry.js';
-import { labApi, onExhibitionOver, initDemoSeeds } from '../evo/api.js';
+import { labApi, onExhibitionOver } from '../evo/api.js';
 import { useThreads } from '../evo/threads.js';
 import { availableParallelism } from 'node:os';
 import { worldsRoute, startWorlds } from './worlds.js';
@@ -16,15 +16,8 @@ import * as C from '../shared/constants.js';
 // solo coordina y aprende, y sigue contestando mientras tanto
 // (en la demo pública, uno solo: el servidor gratuito tiene poca memoria)
 useThreads(process.env.PUBLIC_DEMO === 'true' ? 1 : Math.max(2, Math.min(4, availableParallelism() - 1)));
-// demo pública con el laboratorio vacío (el disco del servidor se borra en cada reinicio):
-// se copian las redes de ejemplo que prepara tools/demo-seed.mjs
-const SEED = join(dirname(fileURLToPath(import.meta.url)), '..', 'demo', 'seed');
-if (process.env.PUBLIC_DEMO === 'true' && process.env.GW_EVO_DIR && existsSync(SEED) && !existsSync(join(process.env.GW_EVO_DIR, 'nets'))) {
-  cpSync(SEED, process.env.GW_EVO_DIR, { recursive: true });
-}
 // mundos (spec/09): lo de antes se archiva una vez (solo en la carpeta real) y se sigue en el último mundo abierto
 startWorlds();
-initDemoSeeds(); // en la demo pública, las redes que hay al arrancar son las de ejemplo
 
 const PORT = Number(process.env.PORT) || 8787;
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -98,10 +91,6 @@ async function api(req, res, parts, url) {
   if (parts[1] === 'health') return json(res, 200, { ok: true, rooms: rooms.size });
   if (parts[1] === 'agents') return json(res, 200, { agents: listAgents() });
   if (parts[1] === 'lab') return labApi(req, res, parts, url); // laboratorio (spec/08), cuerpos hasta 48 MB
-  // en la demo pública nadie puede abrir ni borrar mundos: vaciaría el laboratorio a todos
-  if (parts[1] === 'worlds' && PUBLIC_DEMO && method !== 'GET') {
-    return json(res, 403, { error: 'En la demo los mundos no se pueden cambiar.' });
-  }
   if (parts[1] === 'worlds') { // mundos (spec/09)
     const b = method === 'GET' ? {} : await readBody(req);
     if (b === CUT) return; // nadie espera la respuesta
