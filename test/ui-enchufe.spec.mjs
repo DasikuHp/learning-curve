@@ -12,6 +12,8 @@ const P = await import('../public/js/lab/plug.js');
 
 const CAT = catalog();
 const tpl = (k) => JSON.parse(JSON.stringify(TEMPLATES[k].genome));
+// el Francotirador de antes de Mira: d recibe f y c (los casos de cables cuentan esas dos entradas)
+const sniperSinMira = () => { const g = tpl('sniper'); return { ...g, blocks: g.blocks.filter((b) => b.type !== 'eye.aim'), wires: g.wires.filter((w) => w.from !== 'mi') }; };
 const blank = () => newGenome({ id: 'mi-red', name: 'Mi red', blocks: [], wires: [] }, makeRng(1));
 const build = (types, wires) => {
   let g = blank();
@@ -28,7 +30,7 @@ const check = (name, fn) => {
 
 // ---------- qué coges al pulsar ----------
 check('grab: salida → cable nuevo; entrada vacía → cable nuevo al revés; entrada con cables → la punta del último', () => {
-  const g = tpl('sniper'); // d recibe f (cable 0) y c (cable 1)
+  const g = sniperSinMira(); // d recibe f (cable 0) y c (cable 1)
   assert.deepEqual(P.grab(g, CAT, { port: 'out', id: 'c' }), { kind: 'from', from: 'c' });
   assert.deepEqual(P.grab(g, CAT, { port: 'in', id: 'd' }), { kind: 'end', index: 1, from: 'c', to: 'd' });
   const e = build(['eye.candidates', 'hand.choose'], []);
@@ -36,7 +38,7 @@ check('grab: salida → cable nuevo; entrada vacía → cable nuevo al revés; e
   assert.deepEqual(P.grab(g, CAT, { card: 'd' }), { kind: 'card', id: 'd' });
 });
 check('grab: los ojos no tienen entrada y las manos y los pies no tienen salida', () => {
-  const g = tpl('sniper');
+  const g = sniperSinMira();
   assert.equal(P.grab(g, CAT, { port: 'in', id: 'c' }), null);
   assert.equal(P.grab(g, CAT, { port: 'out', id: 'ch' }), null);
   assert.equal(P.grab(g, CAT, { port: 'out', id: 'fm' }), null);
@@ -112,7 +114,7 @@ check('lo que targets marca como válido, al soltarlo, nunca trae errores nuevos
 
 // ---------- desenchufar (coger la punta de un cable que ya estaba) ----------
 check('la punta soltada en el vacío quita ese cable y solo ese', () => {
-  const g = tpl('sniper');
+  const g = sniperSinMira();
   const held = P.grab(g, CAT, { port: 'in', id: 'd' });
   const r = P.drop(g, CAT, held, { node: null });
   assert.equal(r.action, 'remove');
@@ -122,7 +124,7 @@ check('la punta soltada en el vacío quita ese cable y solo ese', () => {
   assert.match(r.text, /Candidatos \(c\).*Instinto \(d\)/);
 });
 check('la punta soltada en su propia tarjeta deja el cable como estaba', () => {
-  const g = tpl('sniper');
+  const g = sniperSinMira();
   const held = P.grab(g, CAT, { port: 'in', id: 'd' });
   assert.equal(P.targets(g, CAT, held).get('d').back, true);
   const r = P.drop(g, CAT, held, { node: 'd' });
@@ -143,7 +145,7 @@ check('la punta soltada en otra tarjeta que vale cambia el cable de sitio', () =
   assert.match(r.label, /c → ch/);
 });
 check('la punta soltada en una tarjeta que no vale deja el cable donde estaba y dice por qué', () => {
-  const g = tpl('sniper');
+  const g = sniperSinMira();
   const held = P.grab(g, CAT, { port: 'in', id: 'd' }); // c → d
   const t = P.targets(g, CAT, held).get('m'); // a unos ojos no se enchufa nada
   assert.equal(t.ok, false);
@@ -153,7 +155,7 @@ check('la punta soltada en una tarjeta que no vale deja el cable donde estaba y 
   assert.match(r.why, /sigue donde estaba/);
 });
 check('Alt + clic: quita todos los cables de un punto (entrada o salida) y los cuenta', () => {
-  const g = tpl('sniper');
+  const g = sniperSinMira();
   const a = P.unplugAll(g, CAT, 'd', 'in');
   assert.equal(ws(a.genome), 'd>ch m>md md>fm');
   assert.equal(a.removed.length, 2);

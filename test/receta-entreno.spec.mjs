@@ -21,7 +21,9 @@ const T = await import('../evo/train.js');
 const store = await import('../evo/store.js');
 const { runBulletin } = await import('../evo/exam.js');
 
-const save = (id, patch = {}, key = 'sniper') => { const g = { ...clone(TEMPLATES[key].genome), id, name: id, ...patch }; const r = store.saveNet(g); assert.ok(r.ok, JSON.stringify(r)); return store.loadNet(id); };
+// el Francotirador con la lr de siempre (0,003): la plantilla ahora trae 0,03, y estas pruebas de receta parten de 0,003
+const SNIPER = (() => { const g = clone(TEMPLATES.sniper.genome); g.learning = { ...g.learning, gradient: { ...g.learning.gradient, lr: 0.003 } }; return g; })();
+const save = (id, patch = {}, key = 'sniper') => { const g = { ...clone(key === 'sniper' ? SNIPER : TEMPLATES[key].genome), id, name: id, ...patch }; const r = store.saveNet(g); assert.ok(r.ok, JSON.stringify(r)); return store.loadNet(id); };
 const SELF = { antagonist: 0, hallOfFame: 0, self: 1 };
 const train = async (netId, games, extra = {}) => {
   const t = T.createTrainer({ netId, speed: 'turbo', workers: 1, duration: { games }, soldiers: 1, seed: extra.seed ?? 4100, opponents: extra.opponents || SELF, ...extra });
@@ -35,7 +37,7 @@ const logOf = () => { const f = join(process.env.GW_EVO_DIR, 'log.jsonl'); retur
 const scores4 = (b) => ({ aim: b.aim, cover: b.cover, survival: b.survival, adaptation: b.adaptation });
 
 await check('learning (learnCfg): entrenar con lr 0,02 solo este entreno = entrenar una copia cuya lr es 0,02; la red guarda su 0,003', async () => {
-  save('lr-a'); save('lr-b', { learning: { ...clone(TEMPLATES.sniper.genome.learning), gradient: { ...TEMPLATES.sniper.genome.learning.gradient, lr: 0.02 } } });
+  save('lr-a'); save('lr-b', { learning: { ...clone(SNIPER.learning), gradient: { ...SNIPER.learning.gradient, lr: 0.02 } } });
   await train('lr-a', 8, { learning: { gradient: { lr: 0.02 } } });
   await train('lr-b', 8);
   assert.deepEqual(store.loadNet('lr-a').weights, store.loadNet('lr-b').weights);
