@@ -9,7 +9,7 @@ import { createTrainer, makeLearner, feedbackTarget, feedbackFromGame, settleFee
 import { heldBy, holdNet, releaseNet, anyHeld } from './busy.js';
 import { runDuel, newDuelId, LEARNING_MODES, SPEEDS } from './duel.js';
 import { challenge, throneView, foundDynasties, runGeneration, readThroneFull, writeThrone, recordDuelInLeague, genealogyView, registerBirth, vacateNet } from './throne.js';
-import { loadGame, appendLog, readLog, loadLogEntry, listGames, saveGame, loadGameNets, readFeedback, writeFeedback, readApplied, appendApplied, readCurves, saveGameKept, netsDir } from './store.js';
+import { loadGame, appendLog, readLog, loadLogEntry, listGames, saveGame, loadGameNets, readFeedback, writeFeedback, readApplied, appendApplied, readCurves, saveGameKept, netsDir, evoDir } from './store.js';
 import { nameNeurons, diaryPhrase, memoryOf } from './truth.js';
 import { runBulletin } from './exam.js';
 import { compile } from '../shared/nn.js';
@@ -88,6 +88,8 @@ function startChildrenJob({ genome, n, mutation, games, opponent, soldiers, seed
 }
 const sseClients = new Set();
 function pushEvent(ev, data) { for (const res of sseClients) { try { res.write(`event: ${ev}\ndata: ${JSON.stringify(data)}\n\n`); } catch { /* ignorar */ } } }
+// la rival de práctica del mundo activo (meta.json del mundo: practice), o null fuera de un mundo
+const practiceRival = () => { try { const f = join(evoDir(), 'meta.json'); const m = existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : null; return m && Array.isArray(m.practice) && typeof m.practice[0] === 'string' ? m.practice[0] : null; } catch { return null; } };
 const activeTraining = (netId) => [...trainings.values()].find((t) => t.netId === netId && ['queued', 'running', 'paused'].includes(t.status)) || null;
 export const pushLabEvent = (ev, data) => pushEvent(ev, data);
 // algo en marcha impide cambiar de mundo (spec/09 §4) → el motivo, o null
@@ -661,6 +663,11 @@ export async function labApi(req, res, parts, url) {
       { const hb = heldText(v.netId, 'para entrenarla'); if (hb) return bad(409, hb); }
       if (v.exploiter) { const th = readThroneFull(); if (!th.queen) return bad(400, 'No hay reina: la retadora explotadora necesita una reina a la que explotar'); if (th.queen === v.netId) return bad(400, 'La reina no puede explotarse a sí misma'); }
       { const rv = validateRecipe({ ...v, duration: d }, loadNet(v.netId)); if (!rv.ok) return json(res, 400, { error: rv.errors[0].message, errors: rv.errors }); }
+      // sin reina ni rival fijo, el antagonista es la rival de práctica del mundo: si no, la red solo juega contra copias de sí misma
+      if (!v.exploiter && !(v.opponents && v.opponents.antagonistId) && !readThroneFull().queen) {
+        const pr = practiceRival();
+        if (pr && pr !== v.netId && loadNet(pr)) v.opponents = { ...(v.opponents || {}), antagonistId: pr };
+      }
       const t = startTraining({ ...v, duration: d });
       return json(res, 202, { id: t.id, status: t.status });
     }

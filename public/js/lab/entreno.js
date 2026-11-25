@@ -19,10 +19,10 @@ const LS = 'gw.lab.level';
 
 // campos del formulario con su explicación (spec/04 §6); el nivel decide cuáles se ven, nada se bloquea
 const FIELDS = {
-  antagonist: { name: 'Antagonista', level: 'aprendiz', explain: 'La red a la que se enfrenta: la reina, o la que elijas como rival fijo.' },
+  antagonist: { name: 'Antagonista', level: 'aprendiz', explain: 'La red a la que se enfrenta: la reina, o la que elijas como rival fijo. Sin reina, Vidente 1, la rival de práctica del mundo.' },
   hallOfFame: { name: 'Sala de la fama', level: 'aprendiz', explain: 'Ex-reinas e hitos propios: evita que olvide cómo ganar a estilos antiguos.' },
   self: { name: 'Ella misma', level: 'aprendiz', explain: 'Una copia congelada del principio del lote: da estabilidad.' },
-  antagonistId: { name: 'Rival fijo', level: 'artesano', explain: 'Si eliges una red, el antagonista es siempre ella (si no, la reina).' },
+  antagonistId: { name: 'Rival fijo', level: 'artesano', explain: 'Si eliges una red, el antagonista es siempre ella (si no, la reina, y sin reina, la rival de práctica).' },
   hard: { name: 'Dureza', level: 'cientifico', explain: 'Cuánto se sortean las ex-reinas que aún le ganan: peso = (1 − tasa de victorias contra ella)^dureza.' },
   ghost: { name: 'Partidas fantasma', level: 'artesano', explain: 'Probabilidad de repetir contra una ex-reina a la que ha perdido en las últimas 20.' },
   workers: { name: 'Hilos', level: 'artesano', explain: 'Partidas en paralelo (solo en turbo).' },
