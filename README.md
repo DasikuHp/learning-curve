@@ -90,7 +90,22 @@ Ahora la plantilla Vidente no lleva Ajustar y aprende con una tasa de 0,01 en ve
 
 En el boletín del juego (40 escenas fijas de un solo disparo) las tres Videntes pasaron de acertar el 15 % de los tiros al 50 %, y su supervivencia contra el bot Sniper subió del 0 % al 35-40 %.
 
-Lo que no está resuelto: las redes sin Simulador, que solo ven la geometría, aprenden mucho más despacio. El Francotirador pasa de 0,40 a 0,56 bajas por partida en 300 partidas contra `chaos`, y contra Vidente 1 apenas cambia en ese tiempo (de 46 a 56 % de victorias en una prueba y de 44 a 46 % en otra). Contra `greedy`, que busca el mejor tiro posible, la señal es débil y con mucho ruido.
+### Las redes sin Simulador
+
+Las redes que solo veían la geometría aprendían mucho más despacio. El Francotirador pasaba de 0,40 a 0,56 bajas por partida en 300 partidas contra `chaos`, y contra Vidente 1 apenas cambiaba (de 46 a 56 % de victorias en una prueba y de 44 a 46 % en otra). Con los ojos que había, la red tenía que deducir sola si un tiro pasa cerca del enemigo, y en 300 partidas no lo conseguía.
+
+Para eso añadí el ojo Mira. Para cada candidato mira a qué altura pasa la curva cuando llega a la x de cada enemigo y da un número entre 0 y 1: 1 si pasa justo por él, 0,13 si pasa a una unidad y casi 0 a dos. No simula la física, así que no ve muros ni rebotes. El Francotirador, la Tortuga y la Vacía llevan ahora Mira y aprenden con una tasa de 0,03, y el tutorial termina conectando el Simulador al Instinto.
+
+Medido en el servidor en modo demo, con la receta por defecto (300 partidas) y el boletín antes y después de entrenar:
+
+| Red | Entrenos | Puntería en el boletín | Victorias (primeras 50 → últimas 50 partidas) |
+| :--- | :---: | :---: | :---: |
+| La del tutorial (con Simulador) | 3 | 17,5 % → 37,5 / 37,5 / 32,5 % | 52→72, 46→64, 44→72 % |
+| Francotirador (con Mira) | 3 | 10 % → 40 / 27,5 / 32,5 % | 36→58, 36→62, 62→58 % |
+| Tortuga (con Mira) | 3 | 15 % → 22,5 / 17,5 / 27,5 % | 50→64, 36→52, 52→52 % |
+| Vacía (con Mira) | 3 | 12,5 % → 22,5 / 15 / 15 % | 36→58, 36→48, 46→54 % |
+
+Lo que no está resuelto: la Tortuga y la Vacía mejoran poco, y sus victorias suben y bajan mucho de un tramo a otro. La Vacía no tiene ninguna capa entre los ojos y Elegir, así que solo puede sumar lo que ve. En la Tortuga no he medido por qué. Contra `greedy`, que busca el mejor tiro posible, solo lo medí con el Francotirador de antes de Mira, y la señal era débil y con mucho ruido.
 
 Los datos salen de los registros de cada entreno (`curve` en `records/trainings/<id>.json`).
 
@@ -124,7 +139,7 @@ flowchart LR
 
 **El juego.** Un disparo es una expresión que `shared/parser.js` convierte en un árbol y luego en una función. `shared/solver.js` traza la trayectoria: si es `y = f(x)`, la desplaza para que pase por el soldado; si es una ecuación diferencial (`y' = …` o `y'' = …`), la integra con Runge-Kutta de orden 4 desde la posición del soldado. La trayectoria acaba al chocar con un obstáculo, salirse del plano o dar un valor imposible, como la raíz de un negativo. `server/rooms.js` lleva los turnos y las reglas, y el navegador recibe cada evento por Server-Sent Events.
 
-**La red.** Cada red es un JSON (su "genoma") con bloques y cables. Hay cuatro familias de bloques: ojos (`eye.*`: mapa, radar, compañeros, historial…), instinto (`dense`, `attention`, `norm`, `pool`…), memoria (`echo`, `gru`, `lstm`) y manos y pies (`hand.choose` elige el tiro y `foot.move`, adónde moverse). `shared/nn.js` compila ese grafo en una red con su pasada hacia delante y hacia atrás. Las memorias guardan estado de un turno a otro, así que el gradiente se calcula con retropropagación en el tiempo, truncada cada pocos pasos.
+**La red.** Cada red es un JSON (su "genoma") con bloques y cables. Hay cuatro familias de bloques: ojos (`eye.*`: mapa, radar, compañeros, historial, Mira…), instinto (`dense`, `attention`, `norm`, `pool`…), memoria (`echo`, `gru`, `lstm`) y manos y pies (`hand.choose` elige el tiro y `foot.move`, adónde moverse). `shared/nn.js` compila ese grafo en una red con su pasada hacia delante y hacia atrás. Las memorias guardan estado de un turno a otro, así que el gradiente se calcula con retropropagación en el tiempo, truncada cada pocos pasos.
 
 **Cómo elige un tiro.** La red no escribe la función letra a letra. El bloque de Imaginación genera unos 24 candidatos de varias familias (rectas, parábolas, senos, ecuaciones de 1.er orden, tiros de artillería), la red puntúa cada uno y elige con un softmax con temperatura: cuanto más alta, más arriesga. Algunas redes tienen además un Simulador que les dice qué pasaría con cada candidato antes de dispararlo.
 
