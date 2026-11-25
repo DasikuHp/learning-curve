@@ -3,16 +3,19 @@
 // errores de consola. Uso: node tools/sondeo.mjs tools/sondeo-crear.mjs  (los pasos exportan default async ({go, ev, sleep, api, load, shot}) => {...})
 // Las capturas van a la carpeta de la variable SP (SP=<carpeta> node tools/sondeo.mjs …).
 import { spawn } from 'node:child_process';
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { join, dirname } from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const PORT = Number(process.env.PPORT || 8799), DBG = Number(process.env.DBG || 9339); // PPORT y DBG: para correr dos sondeos a la vez
-const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+// el navegador: CHROME=<ruta>, o Chrome o Edge en su sitio de siempre en Windows
+const CHROME = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find((f) => existsSync(f));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const evo = mkdtempSync(join(tmpdir(), 'gw-probe-'));
-const srv = spawn(process.execPath, ['server/server.js'], { cwd: 'E:/grafwar', env: { ...process.env, PORT: String(PORT), GW_EVO_DIR: evo }, stdio: ['ignore', 'pipe', 'pipe'] });
+const srv = spawn(process.execPath, ['server/server.js'], { cwd: ROOT, env: { ...process.env, PORT: String(PORT), GW_EVO_DIR: evo }, stdio: ['ignore', 'pipe', 'pipe'] });
 srv.stderr.on('data', (d) => process.stdout.write(`[servidor] ${d}`));
 const base = `http://127.0.0.1:${PORT}`;
 const api = async (path, method = 'GET', body) => { const r = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined }); return { status: r.status, body: await r.json().catch(() => null) }; };
@@ -40,6 +43,19 @@ const send = (method, params = {}) => new Promise((r) => {
   setTimeout(() => { if (pending.has(i)) { pending.delete(i); problems.push(`Chrome no contestó a ${method}`); r({}); } }, 30000);
 });
 await send('Runtime.enable'); await send('Log.enable'); await send('Page.enable');
+// REC=<carpeta>: guarda la sesión como fotogramas (screencast) con su instante, para montar un vídeo después
+const REC = process.env.REC; let frames = 0;
+if (REC) {
+  mkdirSync(REC, { recursive: true });
+  ws.addEventListener('message', (m) => {
+    const msg = JSON.parse(m.data);
+    if (msg.method !== 'Page.screencastFrame') return;
+    frames++;
+    writeFileSync(join(REC, `${String(msg.params.metadata.timestamp.toFixed(3)).padStart(16, '0')}.jpg`), Buffer.from(msg.params.data, 'base64'));
+    ws.send(JSON.stringify({ id: ++id, method: 'Page.screencastFrameAck', params: { sessionId: msg.params.sessionId } }));
+  });
+  await send('Page.startScreencast', { format: 'jpeg', quality: 85, everyNthFrame: 1 });
+}
 const ev = async (expr) => { const r = await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true }); return r.result?.result?.value ?? r.result?.exceptionDetails?.exception?.description; };
 const go = async (hash, wait = 1500) => { await ev(`location.hash = ${JSON.stringify(hash)}`); await sleep(wait); };
 const load = async (path, wait = 2500) => { await send('Page.navigate', { url: base + path }); await sleep(wait); };
@@ -50,5 +66,6 @@ try {
   await steps({ go, ev, sleep, api, load, shot, problems, send });
 } catch (e) { console.log('FALLO DEL SONDEO', e); }
 console.log(problems.length ? `\n${problems.length} problema(s):\n${problems.join('\n')}` : '\nsin excepciones ni errores de consola');
+if (REC) { await send('Page.stopScreencast'); console.log(`${frames} fotogramas en ${REC}`); }
 ws.close(); chrome.kill(); srv.kill();
 process.exit(0);
