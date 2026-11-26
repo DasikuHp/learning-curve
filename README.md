@@ -24,9 +24,9 @@ Todo el aprendizaje está escrito a mano en JavaScript, sin librerías de machin
 
 <sub>La demo está en el plan gratuito de Render: si nadie la ha usado en un rato, tarda alrededor de un minuto en despertar. Es compartida, se vacía en cada reinicio y tiene límites para no saturarse (entrenos de 300 partidas como mucho y dos a la vez).</sub>
 
-<!-- VIDEO_TUTORIAL: enlace de user-attachments de _work/video-lc/tutorial.mp4 y debajo:
+https://github.com/user-attachments/assets/cf5309c1-eb5b-4f09-819e-c222aa8716bc
+
 <sub>El tutorial «Tu primera red», acelerado: el editor empieza a oscuras y se va encendiendo a medida que montas la red.</sub>
--->
 
 ## Qué hace
 
@@ -42,9 +42,9 @@ Cada partida guardada es un mundo con sus redes, su trono y su historia, y empie
 | <img src="docs/media/duelo.png" width="420"> | <img src="docs/media/trono.png" width="420"> |
 | Dos redes juegan en directo. A la derecha, los candidatos que barajó la red, la probabilidad de cada uno y el registro de la partida. | Esa Vidente, ya entrenada, le quita el trono a Vidente 1, que pasa a la sala de la fama. También están los duelos mapa a mapa, las dinastías y el árbol genealógico. |
 
-<!-- VIDEO_DUELO: enlace de user-attachments de _work/video-lc/duelo.mp4 y debajo:
+https://github.com/user-attachments/assets/f63af027-2f08-4124-b26f-0327bb64c52d
+
 <sub>Un duelo en directo entre Vidente 1 y una red recién creada.</sub>
--->
 
 Al crear una partida eliges desde dónde empiezas, y eso decide cuánto enseña el editor:
 
