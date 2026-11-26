@@ -10,7 +10,7 @@
     <img alt="CSS3" src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
   </p>
   <p>
-    <a href="__DEMO_URL__"><img alt="Demo en Render" src="https://img.shields.io/badge/demo-en_Render-46E3B7?logo=render&logoColor=white"></a>
+    <a href="https://learning-curve-js7u.onrender.com"><img alt="Demo en Render" src="https://img.shields.io/badge/demo-en_Render-46E3B7?logo=render&logoColor=white"></a>
     <img alt="Sin dependencias en el servidor" src="https://img.shields.io/badge/servidor-0_dependencias-blue">
     <img alt="Todos los derechos reservados" src="https://img.shields.io/badge/licencia-todos_los_derechos_reservados-red">
   </p>
@@ -20,7 +20,7 @@ En [Graphwar](https://www.graphwar.com/), el juego de Lucas Catabriga, cada juga
 
 Todo el aprendizaje está escrito a mano en JavaScript, sin librerías de machine learning: la red, la retropropagación, el optimizador Adam y las estrategias evolutivas.
 
-**Pruébalo:** [__DEMO_URL__](__DEMO_URL__)
+**Pruébalo:** [https://learning-curve-js7u.onrender.com](https://learning-curve-js7u.onrender.com)
 
 <sub>La demo está en el plan gratuito de Render: si nadie la ha usado en un rato, tarda alrededor de un minuto en despertar. Es compartida, se vacía en cada reinicio y tiene límites para no saturarse (entrenos de 300 partidas como mucho y dos a la vez).</sub>
 
